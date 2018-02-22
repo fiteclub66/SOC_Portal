@@ -1,0 +1,8 @@
+{
+    "name": "SOC_Portal",
+    "version": "1.0.0",
+    "keywords": ["util", "functional", "server", "client", "browser"],
+    "author": "cameronfite",
+    "contributors": [],
+    "dependencies": {}
+}
