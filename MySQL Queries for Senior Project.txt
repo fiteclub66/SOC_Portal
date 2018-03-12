@@ -1,0 +1,239 @@
+/* this will be included in every place that will be connecting to the database for each query.  
+
+import pypyodbc //will be included wherever you import stuff for SQL Server 
+import mysql.connector //included for MySQL connector
+//will be included at the top of the page more than likely -> could be kept private if possible in python,
+// or placed in a config file and config file imported to every page
+
+// this connection string is specifically for an SQL Server 
+connection = pypyodbc.connect('Driver={whatever our SQL server is}', 
+Server=10.0.51.21', 'Database=SOC_Portal', 'uid=$userID', 'pwd=$password')
+
+// this connection string and import is specifically for MySQL server
+import mysql.connector
+connection = mysql.connector.connect(user=$userName, password=$password, database='SOC_Portal', host='10.0.50.21//or 10.0.5.22')
+*/
+
+
+Login Page Queries in MySQL
+
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()
+query = ("SELECT userName, password FROM Users WHERE userName = $userName AND password = $password")
+cursor.execute(query)
+cursor.close()
+connection.close()
+
+New User Page MySQL Queries
+
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()	
+query = ("INSERT INTO Users (userID, userName, password, firstName, lastName, email, phoneNumber, position, categories) VALUES ($userID, $userName, $password, $firstName, $lastName, $email, $phoneNumber, $position, $categories)")
+cursor.execute(query)
+connection.commit()
+cursor.close()
+connection.close()
+
+New Skillset Page MySQL Queries
+
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()	
+query = ("UPDATE Category Relations SET skillset = $skillset WHERE category = $category")
+cursor.execute(query)
+connection.commit()
+cursor.close()
+connection.close()
+
+New Category Page MySQL Queries
+
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()	
+query = ("UPDATE Category Relations SET category = $category and skillset = $skillset WHERE category = $category")
+cursor.execute(query)
+connection.commit()
+cursor.close()
+connection.close()
+
+New Client Information Page MySQL Queries
+
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()	
+query = ("INSERT INTO Client Information (clientID, clientName, email, phoneNumber, categories) VALUES ($clientID, $clientName, $email, $phoneNumber, $categories)")
+cursor.execute(query)
+connection.commit()
+cursor.close()
+connection.close()
+
+Edit Client Info Page MySQL Queries
+
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()	
+query = ("UPDATE Client Information SET clientName = $clientName and email = $email and phoneNumber = $phoneNumber and category = $category and skillset = $skillset WHERE clientID = $clientID)
+cursor.execute(query)
+connection.commit()
+cursor.close()
+connection.close()
+
+Edit Analyst Information page MySQL Queries
+
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()	
+query = ("UPDATE Users SET firstName = $firstName and lastName = $lastName and email = $email and phoneNumber = $phoneNumber and category = $category and skillset = $skillset WHERE userID = $userID)
+cursor.execute(query)
+connection.commit()
+cursor.close()
+connection.close()
+
+Create New Task Singular Page MySQL Queries
+
+from datetime import date, datetime, timedelta
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()	
+query = ("INSERT INTO Upcoming Tasks (taskID, clientName, taskName, catSkillID, dueDate//(whatever the date is, (YEAR, MONTH, DATE)), frequency//(whatever the date is, (YEAR, MONTH, DATE)), startTime, stopTime, totalTime, status, SLA, specialNotes, counter, subTask) VALUES ($taskID, $clientName, $taskName, $catSkillID, $dueDate, $frequency, $startTime, $stopTime, $totalTime, $status, $SLA, $specialNotes, $counter, $subTask)")
+cursor.execute(query)
+connection.commit()
+cursor.close()
+connection.close()
+
+Create New Task Recurring-Weekly Page MySQL Queries
+
+from datetime import date, datetime, timedelta
+weekly = datetime.now().date() + timedelta(days=7)
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()	
+query = ("INSERT INTO Upcoming Tasks (taskID, clientName, taskName, catSkillID, dueDate//(whatever the date is, (YEAR, MONTH, DATE)), frequency//using variable weekly, startTime, stopTime, totalTime, status, SLA, specialNotes, counter, subTask) VALUES ($taskID, $clientName, $taskName, $catSkillID, $dueDate, $frequency==weekly variable, $startTime, $stopTime, $totalTime, $status, $SLA, $specialNotes, $counter, $subTask)")
+cursor.execute(query)
+connection.commit()
+cursor.close()
+connection.close()
+
+Create New Task Recurring-Monthly Page MySQL Queries
+
+from datetime import date, datetime, timedelta
+monthly = datetime.now().date() + timedelta(days=28)
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()	
+query = ("INSERT INTO Upcoming Tasks (taskID, clientName, taskName, catSkillID, dueDate//(whatever the date is, (YEAR, MONTH, DATE)), frequency//using variable monthly, startTime, stopTime, totalTime, status, SLA, specialNotes, counter, subTask) VALUES ($taskID, $clientName, $taskName, $catSkillID, $dueDate, $frequency==monthly variable, $startTime, $stopTime, $totalTime, $status, $SLA, $specialNotes, $counter, $subTask)")
+cursor.execute(query)
+connection.commit()
+cursor.close()
+connection.close()
+
+Create New Task Recurring-Minutely Page MySQL Queries
+
+from datetime import date, datetime, timedelta
+minutely = datetime.now().date() + timedelta(minutes=//however many minutes the user is specifying)
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()	
+query = ("INSERT INTO Upcoming Tasks (taskID, clientName, taskName, catSkillID, dueDate//(whatever the date is, (YEAR, MONTH, DATE)), frequency//using variable minutely, startTime, stopTime, totalTime, status, SLA, specialNotes, counter, subTask) VALUES ($taskID, $clientName, $taskName, $catSkillID, $dueDate, $frequency==minutely variable, $startTime, $stopTime, $totalTime, $status, $SLA, $specialNotes, $counter, $subTask)")
+cursor.execute(query)
+connection.commit()
+cursor.close()
+connection.close()
+
+Create New Task Recurring-Minutely Page MySQL Queries
+
+from datetime import date, datetime, timedelta
+hourly = datetime.now().date() + timedelta(hours=//however many hours the user is specifying)
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()	
+query = ("INSERT INTO Upcoming Tasks (taskID, clientName, taskName, catSkillID, dueDate//(whatever the date is, (YEAR, MONTH, DATE)), frequency//using variable hourly, startTime, stopTime, totalTime, status, SLA, specialNotes, counter, subTask) VALUES ($taskID, $clientName, $taskName, $catSkillID, $dueDate, $frequency==hourly variable, $startTime, $stopTime, $totalTime, $status, $SLA, $specialNotes, $counter, $subTask)")
+cursor.execute(query)
+connection.commit()
+cursor.close()
+connection.close()
+
+Create New Task Recurring-Daily Page MySQL Queries
+
+from datetime import date, datetime, timedelta
+daily = datetime.now().date() + timedelta(days=1) //starts tomorrow, not sure what would need to change for it to start today and then become a daily task
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()	
+query = ("INSERT INTO Upcoming Tasks (taskID, clientName, taskName, catSkillID, dueDate//(whatever the date is, (YEAR, MONTH, DATE)), frequency//using variable daily, startTime, stopTime, totalTime, status, SLA, specialNotes, counter, subTask) VALUES ($taskID, $clientName, $taskName, $catSkillID, $dueDate, $frequency==daily variable, $startTime, $stopTime, $totalTime, $status, $SLA, $specialNotes, $counter, $subTask)")
+cursor.execute(query)
+connection.commit()
+cursor.close()
+connection.close()
+
+Create New Task Recurring-Annualy Page MySQL Queries
+
+from datetime import date, datetime, timedelta
+annually = datetime.now().date() + timedelta(days=365) //starts tomorrow, not sure what would need to change for it to start today and then become a daily task
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()	
+query = ("INSERT INTO Upcoming Tasks (taskID, clientName, taskName, catSkillID, dueDate//(whatever the date is, (YEAR, MONTH, DATE)), frequency//using variable annually, startTime, stopTime, totalTime, status, SLA, specialNotes, counter, subTask) VALUES ($taskID, $clientName, $taskName, $catSkillID, $dueDate, $frequency==annually variable, $startTime, $stopTime, $totalTime, $status, $SLA, $specialNotes, $counter, $subTask)")
+cursor.execute(query)
+connection.commit()
+cursor.close()
+connection.close()
+
+Analyst Hubpage Page MySQL Queries
+
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()
+query = ("SELECT taskID, clientName, category, skillset, dueDate FROM Upcoming Tasks WHERE ")
+cursor.execute(query)
+cursor.close()
+connection.close()
+
+Analyst Overviews Page MySQL Queries
+
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()
+query = ("SELECT * FROM Metrics WHERE Metrics.userID = Users.userID")
+cursor.execute(query)
+cursor.close()
+connection.close()
+
+Viewer Page MySQL Queries
+
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()
+query = ("SELECT * FROM Metrics, Users WHERE Metrics.userID = Users.userID") // not sure how to get all of the data here from all users, will most likely have to use python to get everything and average everything
+cursor.execute(query)
+data = cursor.fetch_all() //will retrieve all data from the query, can manipulate it after here
+cursor.close()
+connection.close()
+
+Admin Hubpage MySQL Queries
+
+//will be similar to analyst hubpage, just need to get the where part down, may have to do several joins
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()
+query = ("SELECT taskID, clientName, category, skillset, dueDate FROM Upcoming Tasks WHERE ")
+cursor.execute(query)
+cursor.close()
+connection.close()
+
+Manager/Admin Overview Page MySQL Queries
+
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()
+query = ("SELECT * FROM Metrics, Users WHERE Metrics.userID = Users.userID")
+cursor.execute(query)
+cursor.close()
+connection.close()
+
+Manager Hubpage1 Page MySQL Queries
+
+//query to select the additional information
+query = ("Select userID, firstName, lastName, phoneNumber, email, category, skillset FROM Users, Skillset Relations, Category Relations WHERE Skillset Relations.userID = Users.userID AND Skillset Relations.catSkillID = Category Relations.catSkillID")
+
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()
+query = ("SELECT userID, firstName, lastName FROM Users, Groups WHERE Groups.userID = Users.userID") //when the page displays it will just select the list of users, not the additional information after the information button is pressed
+cursor.execute(query)
+cursor.close()
+connection.close()
+
+Manager HubPage2 Page MySQL Queries
+
+//query to select the additional information
+query = ("Select clientID, clientName, phoneNumber, email, category, skillset FROM Client Information, Category Relations WHERE Category Relations.category = Client Information.category AND Category Relations.skillset = Client Information.skillset")
+
+connection = mysql.connector.connect(database='SOC_Portal')
+cursor = connection.cursor()
+query = ("SELECT clientID, clientName FROM Client Information") // when the page displays it will just select the list of clients, not the additional information after the information button is pressed
+cursor.execute(query)
+cursor.close()
+connection.close()
