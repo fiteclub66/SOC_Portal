@@ -1,46 +1,69 @@
 '''
-Created on Mar 21, 2018
+Created on Apr 9, 2018
 
 @author: zachauzenne
 '''
+import mysql.connector
 from NewTaskRecurring import Task
 import datetime
 from datetime import timedelta
 
+taskList = []
 def adjCount(t):
     margin = timedelta(days=1)
     temp = int(margin.total_seconds())/24
-    c = temp/t.freq
+    c = temp/t.frequency
     return c
 
 def nextDayTasks(rT):
     rT.setCount()
+    rT.counter -= 1
+    sT = rT.subTask+1
     today = datetime.datetime.today()
     current = datetime.datetime(today.year, today.month, today.day)
     targetDate = (current + timedelta(days=29))
-    nextDueDate = (targetDate +  timedelta(hours=rT.freq))
+    nextDueDate = (targetDate +  timedelta(hours=rT.frequency))
     tempCount = adjCount(rT)
     while (tempCount > 0):
-        taskNew = Task(rT.taskName, rT.startDate, rT.endDate, rT.freqType, rT.freq, rT.count)
+        taskNew = Task(rT.taskID, rT.clientName, rT.taskName, rT.catSkillID, rT.startDate, rT.endDate, rT.freqType, rT.frequency, rT.startTime, rT.stopTime, rT.totalTime, rT.status, rT.SLA, rT.specialNotes, rT.counter, rT.subTask)
         if ((nextDueDate > (targetDate + timedelta(days=1))) or (nextDueDate > rT.endDate)):
             tempCount = 0
         else:
             taskNew.startDate = nextDueDate
-            nextDueDate += timedelta(hours=rT.freq)
+            nextDueDate += timedelta(hours=rT.frequency)
             tempCount -= 1
-            rT.count -= 1
-            taskNew.count = rT.count
-            tNStr = taskNew.display()
-            outfile.write((str(tNStr))+"\n")
+            rT.counter -= 1
+            taskNew.subTask = sT
+            sT+=1
+            taskNew.count = rT.counter
+            taskList.append(taskNew)
 
-infile = open("ExistingTasks.txt", "r") 
-outfile = open("NextDay.txt", "w")
-for line in infile:
-    name,dt1,dt2,ft,f,c = line.split("/")
-    yy1,mm1,dd1,hh1 = dt1.split(",")
-    yy2,mm2,dd2,hh2 = dt2.split(",")
-    task1 = Task(name, datetime.datetime(int(yy1),int(mm1),int(dd1),int(hh1)), datetime.datetime(int(yy2),int(mm2),int(dd2),int(hh2)),ft,int(f),int(c))
-    nextDayTasks(task1)
-    
-    
-    #populateRecurring(task1) 
+def main(tID, cN, tN, csID, sD, eD, fT, f, staT, stoT, totT, stat, SLA, spN, c, sT):
+    rootTask = Task(tID, cN, tN, csID, sD, eD, fT, f, staT, stoT, totT, stat, SLA, spN, c, sT)
+    nextDayTasks(rootTask)
+    return taskList
+
+db = mysql.connector.connect(user='root', password='MyR00t1423!',
+                              host='10.0.51.21',
+                              database='SOC_Portal')
+
+
+cur = db.cursor(buffered=True)
+
+query = ("SELECT * FROM (SELECT DISTINCT taskName, min(counter) as mincounter FROM UpcomingTasks WHERE freqType = ('Hourly') GROUP BY taskName) AS x INNER JOIN UpcomingTasks as f on f.taskName = x.taskName and f.counter = x.mincounter")
+cur.execute(query)
+
+for (item) in cur:
+    tList = main(item[2], item[3], item[4], item[5], item[6], item[7], item[8], item[9], item[10], item[11], item[12], item[13], item[14], item[15], item[16], item[17])
+    for item in tList:
+        query = ("INSERT INTO UpcomingTasks (taskID, clientName, taskName, catSkillID, startDate, endDate, freqType, frequency, startTime, stopTime, totalTime, status, SLA, specialNotes, counter, subTask) VALUES (1, BMT, Task1, 1001, (2018,04,03,1), (2018,08,21,1), Daily, 1, 0, 0, 0, pending, SLA, This is a task, 0, 0)")
+        insertTask = ("INSERT INTO UpcomingTasks "
+                      "(clientName, taskName, catSkillID, startDate, endDate, freqType, frequency, startTime, stopTime, totalTime, status, SLA, specialNotes, counter, subTask) "
+                       "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+
+        taskData = (item.clientName, item.taskName, item.catSkillID, item.startDate, item.endDate, item.freqType, item.frequency, item.startTime, item.stopTime, item.totalTime, item.status, item.SLA, item.specialNotes, item.counter, item.subTask)
+
+        cur.execute(insertTask,taskData)
+db.commit()          
+cur.close()  
+db.close()
