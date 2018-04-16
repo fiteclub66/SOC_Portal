@@ -1,0 +1,64 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-top: 20px">
+        <div class="col-xs-12 col-sm-5 col-md-6 col-lg-3">
+            <img src="/static/Cybriant_Logo.png" height="60px" width="300px">
+        </div>
+        <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2" style="color: #1C384B; padding-top: 20px">
+            <a href="/taskQueue" style="color:#1C384B; text-decoration: none"><h3 style="font-family: 'Lato', sans-serif;">Hub Page</h3></a>
+        </div>
+        <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2" style="color: #1C384B; padding-top: 20px">
+            <a href="/overview" style="color:#1C384B; text-decoration: none"><h3 style="font-family: 'Lato', sans-serif;">Overview</h3></a>
+        </div>
+    </div>
+    <hr style="border-width: 3px">
+    <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="font-family: 'Lato', sans-serif; padding-left: 4%; padding-top: 50px">
+            <h4 color="#1C384B">Add New Client</h4>
+        </div >
+    </div>
+    <br>
+    {% from "includes/_formhelpers.html" import render_field %}
+    <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" ></div>
+        <form method="POST" action="">
+            <div class="form-group">
+                {{render_field(form.clientName, class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{render_field(form.clientEmail, class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{render_field(form.clientPhone, class_="form-control")}}
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <hr  style="width: 100%; border-top: 1px solid gray;">
+            </div>
+            THIS IS WHERE SELECTING WILL HAPPEN
+            <p><input id="compBtn" type="" disabled class="btn btn-primary" onclick="complete()" value="Complete" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function isEmpty(str) {
+        return (!str || 0 === str.length);
+    }
+
+    function checkFields(){
+        var name = $('#clientName').val();
+        var email = $('#clientEmail').val();
+        var num = $('#clientPhone').val();
+        if(name != "")
+            if (email != "")
+                if (num != "")
+                    $('#comBtn').removeAttr('disabled');
+    }
+    $('#clientName').on('change', checkFields());
+    $('#clientEmail').on('change', checkFields());
+    $('#clientPhone').on('change', checkFields());
+
+</script>
+{% endblock %}

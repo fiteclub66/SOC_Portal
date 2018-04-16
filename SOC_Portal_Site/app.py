@@ -2,11 +2,13 @@ from flask import Flask, render_template, request, flash, session, redirect, url
 from wtforms import Form, StringField, TextAreaField, IntegerField, DateTimeField, FloatField
 from taskQueueFill import populateTable
 from writeCompletedTask import handleCompTask
-
+from fillAddNewTask import populateDropdowns
+from TaskHandling import taskIntake
+from writeNewClient import addClient
+from writeNewUser import addUser
+from datetime import datetime
 
 app=Flask(__name__)
-
-
 
 @app.route('/')
 def index():
@@ -19,13 +21,14 @@ class taskForm(Form):
     category = StringField("Category")
     skillset = StringField("Skillset")
     startDate = DateTimeField("Due Date")
+    endDate = DateTimeField("endDate")
+    freqType = StringField("Frequency Type")
+    frequency = IntegerField("Frequency")
     totalTime = StringField("Total Time")
     status = StringField("Status")
     specialNotes = TextAreaField("Special Notes")
     reason = TextAreaField("Reasoning")
     
-    
-
 @app.route('/taskQueue', methods=['GET', 'POST'])
 def taskQueue():
     taskList = populateTable()
@@ -36,6 +39,48 @@ def taskQueue():
         taskList = populateTable()
         return redirect(url_for('taskQueue'))
     return render_template('TaskQueue.html', tasks = taskList, form=form)
+
+@app.route('/addNewTask', methods=['GET', 'POST'])
+def addNewTask():
+    data = populateDropdowns()
+    clientList = data[0]
+    cC = data[1]
+    #cS = data[2]
+    form = taskForm(request.form)
+    if request.method == "POST":
+        taskIntake(form.clientName.data, form.taskName.data, form.category.data, datetime(2018,04,15, 2), datetime(2018,04,30, 2), form.freqType.data, form.frequency.data)
+        return redirect(url_for('index'))
+    return render_template('addNewTask.html', form=form, clients = clientList, catSkills = cC)
+
+class clientForm(Form):
+    clientName = StringField("Client Name")
+    clientEmail = StringField("Email")
+    clientPhone = StringField("Phone Number")
+
+@app.route('/addNewClient', methods=['GET','POST'])
+def addNewClient():
+    form = clientForm(request.form)
+    if request.method == "POST":
+        addClient(form.clientName.data, form.clientEmail.data, form.clientPhone.data)
+        return redirect(url_for('index'))
+    return render_template('addNewClient.html', form=form)
+
+class userForm(Form):
+    userName = StringField("UserName")
+    password = StringField("Password")
+    firstName = StringField("First Name")
+    lastName = StringField("Last Name")
+    email = StringField("Email")
+    phoneNumber = StringField("Phone Number")
+    position = StringField("Position")
+    
+@app.route('/addNewUser', methods=['GET','POST'])
+def addNewuser():
+    form = userForm(request.form)
+    if request.method == "POST":
+        addUser(form.userName.data, form.password.data, form.firstName.data, form.lastName.data, form.email.data, form.phoneNumber.data, form.position.data)
+        return redirect(url_for('index'))
+    return render_template('addNewUser.html', form=form)
 
 if __name__ == '__main__':
     app.run(debug=True)

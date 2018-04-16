@@ -1,0 +1,261 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-top: 20px">
+        <div class="col-xs-12 col-sm-5 col-md-6 col-lg-3">
+            <img src="/static/Cybriant_Logo.png" height="60px" width="300px">
+        </div>
+        <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2" style="color: #1C384B; padding-top: 20px">
+            <a href="/taskQueue" style="color:#1C384B; text-decoration: none"><h3 style="font-family: 'Lato', sans-serif;">Hub Page</h3></a>
+        </div>
+        <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2" style="color: #1C384B; padding-top: 20px">
+            <a href="/overview" style="color:#1C384B; text-decoration: none"><h3 style="font-family: 'Lato', sans-serif;">Overview</h3></a>
+        </div>
+    </div>
+    <hr style="border-width: 3px">
+    <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="font-family: 'Lato', sans-serif; padding-left: 4%; padding-top: 50px">
+            <h4 color="#1C384B">Add New Task</h4>
+        </div >
+    </div>
+    <br>
+    {% from "includes/_formhelpers.html" import render_field %}
+    <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" ></div>
+        <form method="POST" action="">
+            <div class="form-group">
+                {{render_field(form.taskName, class_="form-control")}}
+            </div>
+            <div class="form-group">
+                <dt>
+                    <label for="clientSelect">Client</label>
+                </dt>
+                <dd>
+                    <select class="form-control" id="clientSelect" onchange="catSelect()">
+                        <option value="-1" disabled selected="selected">Select Client</option>
+                        {% for client in clients %}
+                            <option value = {{client[0]}}>{{client[1]}}</option>
+                        {% endfor %}
+                    </select>
+                </dd>
+            </div>
+            {% for set in catSkills %}
+            <div hidden class="form-group" id="catSel{{set[0][0]}}">
+                <dt>
+                    <label for="categorySelect{{set[0][0]}}">Category/Skillset</label>
+                </dt>
+                <dd>
+                    <select class="form-control select" id="categorySelect{{set[0][0]}}" onchange="">
+                        <option value="-1" disabled selected="selected">Select Category/Skillset</option>
+                        {% for item in set %}
+                                <option value = "{{item[2]}}" name = "{{item[4]}}">{{item[3]}} - {{item[4]}}</option>
+                        {% endfor %}
+                    </select>
+                </dd>
+            </div>
+            {% endfor %}
+            <div class="form-group">
+                <dt >
+                    <label for="taskTypeSelector">Task Type</label>
+                </dt>
+                <dd>
+                    <select class="form-control select" id="taskTypeSelector" onchange="showMenu(this.id)">
+                        <option value="-1" disabled selected="selected">Select Task Type</option>
+                        <option value="0">Singular</option>
+                        <option value="1">Recurring</option>
+                    </select>
+                </dd>
+            </div>
+            <div id="recurringMenu" hidden class="form-group row " style="background-color: #DCDCDC; width: 500px; padding-top: 10px; padding-bottom: 20px; border-radius:5px;">
+                <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <dt>
+                            <label for="recurringStart">Start Date</label>
+                        </dt>
+                        <dd>
+                            <div id="recurringStart">DATE PICKER HERE</div>
+                        </dd>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <dt>
+                            <label for="recurringEnd">End Date</label>
+                        </dt>
+                        <dd>
+                            <div id="recurringEnd">DATE PICKER HERE</div>
+                        </dd>
+                    </div>
+                </div>
+                <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <hr  style="width: 90%; border-top: 1px solid gray;">
+                </div>
+                <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <div class="radio">
+                            <label><input type="radio" name="optradio" value="Minutely" onclick="setInfo(this.value)"> Minutely</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="optradio" value="Hourly" onclick="setInfo(this.value)"> Hourly</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="optradio" value="Daily" onclick="setInfo(this.value)"> Daily</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="optradio" value="Weekly" onclick="setInfo(this.value)"> Weekly</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="optradio" value="Monthly" onclick="setInfo(this.value)"> Monthly</label>
+                        </div>
+                    </div>
+                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="border-left: 1px solid gray; height: 100%;"></div>
+                    <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+                        <div hidden id="MinutelyOpt">
+                            Repeat every <select class="form-control select" id="minuteFreq">
+                            <option value="15">15</option>
+                            <option value="30">30</option>
+                        </select> minutes.
+                        </div>
+                        <div hidden id="HourlyOpt">
+                            Repeat every <select class="form-control select" id="hourFreq">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="4">4</option>
+                            <option value="6">6</option>
+                            <option value="8">8</option>
+                            <option value="12">12</option>
+                        </select> hours.
+                        </div>
+                        <div hidden id="DailyOpt">
+                            Task will repeat every day.
+                        </div>
+                        <div hidden id="WeeklyOpt">
+                            Task will repeat every week.
+                        </div>
+                        <div  hidden id="MonthlyOpt">
+                            Task will repeat every month.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="singularMenu" hidden class="form-group row col-xs-12 col-sm-12 col-md-12 col-lg-12" style="background-color: #DCDCDC; width: 500px; padding-right: 20px; padding-top: 10px; padding-bottom: 20px; border-radius:5px;">
+                <div>
+                    <dt>
+                        <label for="singularSelect">Start Date</label>
+                    </dt>
+                    <dd>
+                        <div id="singularSelect">DATE PICKER HERE</div>
+                    </dd>
+                </div>
+            </div>
+            <div hidden class="form-group">
+                {{render_field(form.clientName, class_="form-control")}}
+            </div>
+            <div hidden class="form-group">
+                {{render_field(form.category, class_="form-control")}}
+            </div>
+            <div hidden class="form-group">
+                {{render_field(form.skillset, class_="form-control")}}
+            </div>
+            <div hidden class="form-group">
+                {{render_field(form.freqType, class_="form-control")}}
+            </div>
+            <div hidden class="form-group">
+                {{render_field(form.frequency, class_="form-control")}}
+            </div>
+            <p><input id="compBtn" type="submit" class="btn btn-primary" onclick="complete()" value="Complete" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+        </form>
+
+    </div>
+</div>
+<script type="text/javascript">
+
+    currentC = 0;
+    function catSelect(){
+        cID = $("#clientSelect").find(':selected').val();
+        if (currentC != cID){
+            $('#catSel'+cID).removeAttr('hidden');
+            $('#catSel'+currentC).attr('hidden', true);
+            $('#skiSel'+currentC).attr('hidden', true);
+        }
+        currentC = cID;
+    }
+
+    currentV = "";
+    function setInfo(v){
+        var s = (v);
+        if (currentV != s){
+            $('#'+s+"Opt").removeAttr('hidden');
+            $('#'+currentV+"Opt").attr('hidden', true);
+        }
+        currentV = s;
+    }
+
+    function showMenu(id){
+        var num = $("#"+id).find(':selected').val();
+        if (num==0){
+            $('#singularMenu').removeAttr('hidden');
+            $('#recurringMenu').attr('hidden', true);
+        }
+        else if (num==1){
+            $('#recurringMenu').removeAttr('hidden');
+            $('#singularMenu').attr('hidden', true);
+        }
+    }
+
+    function complete(){
+    //    CLIENT NAME EQUAL TO CLIENT SELECT
+        var client = $('#clientSelect').find(':selected').text();
+        $('#clientName').val(client);
+    //    CATEGORY EQUAL TO CATEGORY SELECT
+        var cID = $("#clientSelect").find(':selected').val();
+        var cat = $('#categorySelect'+cID).find(':selected').attr("value");
+        $('#category').val(cat);
+    //    SKILLSET EQUAL TO SKILLSET SELECT
+        var sID = $("#clientSelect").find(':selected').val();
+        var ski = $('#categorySelect'+sID).find(':selected').attr("name");
+        $('#skillset').val(ski);
+    //    START AND END DATES EQUAL TO DATEPICKERS
+    //    FREQTYPE SET TO OPTION RADIO
+        var taskType = $('#taskTypeSelector').find(':selected').val();
+        var checked = "";
+        if (taskType == 0){
+            $('#freqType').val("Singular");
+        }
+        else if (taskType == 1){
+            checked = $('input[name="optradio"]').filter(':checked').val();
+            $('#freqType').val(checked);
+        }
+    //    FREQUENCY SET TO CORRESPONDING DROPDOWN
+        switch (checked){
+            case "":
+                $('#frequency').val(1);
+                break;
+
+            case "Minutely":
+                $('#frequency').val($('#minuteFreq').find(':selected').val());
+                break;
+
+            case "Hourly":
+                $('#frequency').val($('#hourFreq').find(':selected').val());
+                break;
+
+            case "Daily":
+                $('#frequency').val(1);
+                break;
+
+            case "Weekly":
+                $('#frequency').val(1);
+                break;
+
+            case "Monthly":
+                $('#frequency').val(1);
+                break;
+        }
+
+    }
+
+
+
+</script>
+{% endblock %}

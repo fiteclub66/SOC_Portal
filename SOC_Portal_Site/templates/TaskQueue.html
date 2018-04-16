@@ -91,6 +91,9 @@
 				<div hidden class="form-group">
 					{{render_field(form.status, class_="text-area form-control")}}
 				</div>
+				<div hidden class="form-group">
+					{{render_field(form.reason, class_="text-area form-control")}}
+				</div>
 				<div><hr></div>
 				<div class="form-group">
 					<dt>
@@ -137,7 +140,12 @@
 								Are you sure you want to skip this task?
 							</div>
 							<div style="padding-left: 30px; padding-right: 30px;">
-								{{render_field(form.reason, class_="form-control")}}
+								<dt>
+									<label for="skipReason">Reasoning?</label>
+								</dt>
+								<dd>
+									<textarea id="skipReason" style="width: 100%;"></textarea>
+								</dd>
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
@@ -160,7 +168,12 @@
 								Are you sure you want to escalate this task?
 							</div>
 							<div style="padding-left: 30px; padding-right: 30px;">
-								{{render_field(form.reason, class_="form-control")}}
+								<dt>
+									<label for="escReason">Reasoning?</label>
+								</dt>
+								<dd>
+									<textarea id="escReason" style="width: 100%;"></textarea>
+								</dd>
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
@@ -257,21 +270,23 @@
     //ENDS TIMER AND SETS TOTAL TIME TO BE PASSED BACK
 	function complete(){
         $('#totalTime').val($("#timer").html());
-        $('#status').val("Skipped");
+        $('#status').val("Complete");
         clearTimeout(t);
 	}
 	//ENDS TIMER AND SKIPS TASK
     function skipTask(){
-        $('#skipModal').modal('hide');
+        //$('#skipModal').modal('hide');
         $('#totalTime').val($("#timer").html());
         $('#status').val("Skipped");
+        $('#reason').val($('#skipReason').val());
         clearTimeout(t);
     }
 	//ENDS TIMER AND ESCALATES TASK
     function escTask(){
-        $('#escModal').modal('hide');
+        //$('#escModal').modal('hide');
         $('#totalTime').val($("#timer").html());
         $('#status').val("Escalated");
+        $('#reason').val($('#escReason').val());
         clearTimeout(t);
     }
 
