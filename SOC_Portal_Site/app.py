@@ -7,6 +7,11 @@ from TaskHandling import taskIntake
 from writeNewClient import addClient
 from writeNewUser import addUser
 from datetime import datetime
+from NewCategory import insertCategoryData
+from NewSkillset import insertSkillsetData
+from Skillsets import populateSkillsets
+from Categories import populateCategories
+from wtforms.validators import length
 
 app=Flask(__name__)
 
