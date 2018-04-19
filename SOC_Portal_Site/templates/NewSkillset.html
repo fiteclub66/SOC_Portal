@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+<div class="container-fluid">
+	<div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      	<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><h3>New Category</h3></div>
+    </div>
+    <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    	<form method="POST">
+    		Name: <input type="text" name="skillsetText">
+    		<br>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    	Available Categories:
+        	<table id="skillsetsTable" name="skillsetsTable"  class="table table-hover" cellspacing="10" width="100%" style="font-family: 'Lato', sans-serif; margin-left: auto; margin-right: auto; color: #1C384B;">
+        		<tbody id="skillsetTableBody" style="margin-top: 10px;">
+        			{% for categories in categories %}
+        			<tr id="{{categories[0]}} name="row{{loop.index}}" style="background-color: #63C9E4; color: white; font-size: 18;  border-top: 2px solid white">"
+        				<td style="padding-left: 10px;"><input class="hidden" name="catSkillID" value={{categories[0]}}></input>
+        				<td style="padding-left: 10px;"><input class="radio" name="categoryNames" value={{categories[1]}}>{{categories[1]}}</td>
+        			</tr>
+        			{% endfor %}
+        		</tbody>
+        	</table>
+    	</form>
+    </div>
+</div> <!-- container end div -->
+
+  <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div class="float-left">
+      <button class="btn btn-danger" name="backButton">Back</button>
+    </div>
+    <div class="float-right">
+      <button class="btn btn-success" name="createButton">Create</button>
+    </div>
+  </div>
+
+ {% endblock %}
