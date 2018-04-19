@@ -13,6 +13,51 @@ app=Flask(__name__)
 @app.route('/')
 def index():
     return render_template('index.html')
+class categoryForm(Form):
+    catSkillID = HiddenField("catSkillID")
+    skillset = BooleanField("Skillsets")
+    categoryName = StringField("Category", [validators.length(min=1)])
+    
+class skillsetForm(Form):
+    catSkillID = HiddenField("catSkillID")
+    categoryName = BooleanField("Skillsets")
+    skillsetName = StringField("Skillset", [validators.length(min=1)])
+    
+@app.route('/NewSkillset', methods=['GET','POST'])
+def addNewSkillset():
+    form = skillsetForm(request.form)
+    if request.method == "POST":
+        
+        insertSkillsetData("""will come from category that is checkboxed""", """whatever category is checkboxed""", form.skillsetName.data)
+    return render_template('NewSkillset.html', form=form)
+
+@app.route('/NewCategory', methods=['GET','POST'])
+def addNewCategory():
+    form = categoryForm(request.form)
+    if request.method == "POST":
+        """if multiple skillsets checkboxed, will have to increment catskillID per skillset"""
+        insertCategoryData("""however i include the category id""", form.categoryName.data, """whatever skillset is checkboxed, or null if no skillsets are checkboxed""")
+    return render_template('NewCategory.html', form=form)
+
+@app.route('/Skillsets', methods=['GET', 'POST'])
+def skillsetList():
+    skillsets = populateSkillsets()
+    form = skillsetForm(request.form)
+    if request.method == "POST":
+        """will need more here"""
+        skillsets = populateSkillets()
+        return redirect(url_for('Skillsets'))
+    return render_template('Skillsets.html', skillsets=skillsets, form=form)
+
+@app.route('/Categories', methods=['GET', 'POST'])
+def categoryList():
+    categories = populateCategories()
+    form = categoryForm(request.form)
+    if request.method == "POST":
+        """will need more here"""
+        categories = populateCategories()
+        return redirect(url_for('Categories'))
+    return render_template('Categories.html', categories=categories, form=form)
 
 class taskForm(Form):
     taskID = IntegerField("Task ID")
