@@ -10,7 +10,6 @@ def handleCompTask(tID, cN, tN, csID, sD, eD, fT, f, totT, stat, SLA, spN, c, sT
 
     cur = db.cursor(buffered=True)
     rea = r
-    print totT
     rT = Task(tID, cN, tN, csID, sD, eD, fT, f, totT, stat, SLA, spN, c, sT)
     
     #PUSH COMPLETED TASK TO PAST TASKS DB

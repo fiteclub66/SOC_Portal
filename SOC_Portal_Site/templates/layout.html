@@ -1,16 +1,12 @@
-<!DOCTYPE html>
 
-<html>
-<head>
-    <title>SOC Portal</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 
     <!-- Roboto Font -->
-    <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet">
 
     <!-- jquery javascript -->
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
@@ -32,17 +28,27 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
 
+
+
+
     <!-- ajax javascript-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 
     <!-- Bootstrap Javascript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 
-    <link href="path/to/multiselect.css" media="screen" rel="stylesheet" type="text/css">
 
-    <div style="background-color: #FDC14A"><br><br></div>
+
+    <div style="background-color: #FDC14A"><a class="btn btn-sm float-right" href="/" style="padding-top: 10px; padding-right: 20px; color: white; font-size: 18px;">LOGOUT</a><br><br></div>
 </head>
 <body>
+<div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-top: 20px" align="middle">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <img src="/static/Cybriant_Logo.png" height="60px" width="300px" style="padding-left: 20px;">
+    </div>
+
+</div>
+<hr style="border-width: 3px">
     {% block body %} {% endblock %}
 </body>
 </html>

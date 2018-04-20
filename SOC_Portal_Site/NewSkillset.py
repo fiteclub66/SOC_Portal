@@ -1,6 +1,5 @@
 import mysql.connector
 from flask import Flask, render_template
-from tkinter.constants import INSERT
 
 def getDB():
     return mysql.connector.connect(user='root', password='MyR00t1423!',

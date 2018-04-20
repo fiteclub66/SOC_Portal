@@ -44,7 +44,7 @@ def taskIntake(cN, tN, csID, sD, eD, fT, f):
         
                 cur.execute(insertTask,taskData)
             else:
-                print "Monthly"
+                print ("Monthly")
     db.commit()          
     cur.close()  
     db.close()

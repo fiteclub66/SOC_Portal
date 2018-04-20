@@ -1,19 +1,14 @@
-{% extends 'layout.html' %}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>ADD NEW CLIENT</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'adminHeader.html' %}
 {% block body %}
 
 <div class="container-fluid">
-    <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-top: 20px">
-        <div class="col-xs-12 col-sm-5 col-md-6 col-lg-3">
-            <img src="/static/Cybriant_Logo.png" height="60px" width="300px">
-        </div>
-        <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2" style="color: #1C384B; padding-top: 20px">
-            <a href="/taskQueue" style="color:#1C384B; text-decoration: none"><h3 style="font-family: 'Lato', sans-serif;">Hub Page</h3></a>
-        </div>
-        <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2" style="color: #1C384B; padding-top: 20px">
-            <a href="/overview" style="color:#1C384B; text-decoration: none"><h3 style="font-family: 'Lato', sans-serif;">Overview</h3></a>
-        </div>
-    </div>
-    <hr style="border-width: 3px">
     <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="font-family: 'Lato', sans-serif; padding-left: 4%; padding-top: 50px">
             <h4 color="#1C384B">Add New Client</h4>
@@ -23,42 +18,88 @@
     {% from "includes/_formhelpers.html" import render_field %}
     <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" ></div>
-        <form method="POST" action="">
-            <div class="form-group">
-                {{render_field(form.clientName, class_="form-control")}}
-            </div>
-            <div class="form-group">
-                {{render_field(form.clientEmail, class_="form-control")}}
-            </div>
-            <div class="form-group">
-                {{render_field(form.clientPhone, class_="form-control")}}
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <hr  style="width: 100%; border-top: 1px solid gray;">
-            </div>
-            THIS IS WHERE SELECTING WILL HAPPEN
-            <p><input id="compBtn" type="" disabled class="btn btn-primary" onclick="complete()" value="Complete" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
-        </form>
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+            <form method="POST" action="">
+                <div class="form-group">
+                    {{render_field(form.clientName, class_="form-control")}}
+                </div>
+                <div class="form-group">
+                    {{render_field(form.clientEmail, class_="form-control")}}
+                </div>
+                <div class="form-group">
+                    {{render_field(form.clientPhone, class_="form-control")}}
+                </div>
+                <div hidden class="form-group">
+                    {{render_field(form.catSkills, class_="form-control")}}
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <hr  style="width: 100%; border-top: 1px solid gray;">
+                </div>
+                <div>
+                    <dt>
+                        <label for="catSkillSel">Category/Skillset Selector</label>
+                    </dt>
+                    <dd>
+                        <select class="form-control select" id="catSkillSel" onchange="addItem(this.id)">
+                            <option value="-1" disabled selected="selected">Add Category/Skillsets</option>
+                            {% for item in catSkills %}
+                            <option id="Opt{{item[0]}}"><b>{{item[1]}}:</b> {{item[2]}}</option>
+                            {% endfor %}
+                        </select>
+                    </dd>
+                </div>
+                <p><input id="compBtn" type="submit" class="btn btn-primary" onclick="complete()" value="Complete" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+            </form>
+        </div>
+        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></div>
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+            <dt>
+                <label for="currentCatSkills">Current Category/Skillsets</label>
+                <p style="font-family: 'Lato', sans-serif; font-size: 12px;"><i>Click to remove.</i></p>
+            </dt>
+            <dd>
+                <div id="currentCatSkills" style="background-color: #DCDCDC; height: 350px;padding-right: 20px; padding-top: 20px; padding-bottom: 20px; border-radius:5px;">
+                    <ul id="list">
+
+                    </ul>
+                </div>
+            </dd>
+        </div>
     </div>
+
 </div>
 
 <script type="text/javascript">
-    function isEmpty(str) {
-        return (!str || 0 === str.length);
+
+
+    function addItem(id){
+        var selected = $('#'+id).find(':selected');
+        var sText = selected.text();
+        var sID = selected.attr('id');
+        var nID = sID.substring(3);
+
+        $('#list').append('<li id="Sel'+nID+'" style="background-color: #ECECEC; padding-left: 10px; padding-right: 20px; border-top: 2px solid #DCDCDC; border-radius: 5px; font-size: 12px;">'+sText+'<button id="Btn'+nID+'" class="btn btn-sm btn-outline-danger" onclick="removeItem(this.id)" >-</button></li>');
+        selected.attr('disabled', 'disabled');
     }
 
-    function checkFields(){
-        var name = $('#clientName').val();
-        var email = $('#clientEmail').val();
-        var num = $('#clientPhone').val();
-        if(name != "")
-            if (email != "")
-                if (num != "")
-                    $('#comBtn').removeAttr('disabled');
+    function removeItem(id){
+        var listItem = id.substring(3);
+        var lID = ("Opt" + listItem);
+        $('#'+lID).removeAttr('disabled');
+        $('#Sel'+listItem).remove();
+
     }
-    $('#clientName').on('change', checkFields());
-    $('#clientEmail').on('change', checkFields());
-    $('#clientPhone').on('change', checkFields());
+
+    function complete(){
+        var cS="";
+        $("li").each(function (){
+            var txt = $(this).attr("id");
+            txt = txt.substring(3);
+            cS+=(txt+",");
+
+        });
+        $('#catSkills').val(cS);
+    }
 
 </script>
 {% endblock %}

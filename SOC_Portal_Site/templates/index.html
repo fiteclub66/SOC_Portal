@@ -1,10 +1,18 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+        <title>CYBRIANT - SOC PORTAL</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 {% extends 'layout.html' %}
 
 {% block body %}
+<div align="middle">
+        <a class="btn btn-lg btn-warning float-center"  href="/taskQueue">Analyst Login</a>
+        <a class="btn btn-lg btn-warning float-center" href="/mTaskQueue">Manager Login</a>
+        <a class="btn btn-lg btn-warning float-center" href="/adminTaskList">Admin Login</a>
+</div>
 
-        <a class="btn btn-large btn-info" href="/taskQueue">Task Queue</a>
-        <a class="btn btn-large btn-info" href="/addNewTask">Add New Task</a>
-        <a class="btn btn-large btn-info" href="/addNewClient">Add New Client</a>
-        <a class="btn btn-large btn-info" href="/addNewUser">Add New User</a>
 
 {% endblock %}

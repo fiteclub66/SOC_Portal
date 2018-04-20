@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>USER LIST</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'adminHeader.html' %}
+{% block body %}
+
+<div class="container-fluid">
+    <br><br>
+    <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="font-family: 'Lato', sans-serif; padding-left: 4%; padding-top: 50px">
+            <h4 color="#1C384B">User List</h4>
+        </div >
+        <div class="col-xs-8 col-sm-8 col-md-7 col-lg-7">
+            <table id="queue" name="queue" class="table table-hover" cellspacing="10" width="100%" style="font-family: 'Lato', sans-serif; margin-left: auto; margin-right: auto; color: #1C384B;">
+                <thead>
+                <tr style="color: #1C384B; background-color: white; font-size: 18;">
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                    <th>Position</th>
+                    <th>
+                        <div>
+                            <a href="/addNewUser"><button class="btn btn-success" name="createButton" style="background-color: #7DDF64; color: white;">Create</button></a>
+                        </div>
+                    </th>
+                </tr>
+                </thead>
+                <!-- uncomment if search bar per column is wanted -->
+                <!-- <tfoot>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot> -->
+                <tbody id="listBod" style="margin-bottom: 10px;">
+                {% for item in userInfo %}
+                <tr id="row{{item[0]}}" name="row{{loop.index}}" style="background-color: #63C9E4; color: white; font-size: 18;  border-top: 2px solid white">
+                    <td id="rowuserID" style="padding-left: 20px;">{{item[0]}}</td>
+                    <td id="rowuserName">{{item[1]}}</td>
+                    <td id="rowfirstName">{{item[3]}}</td>
+                    <td id="rowlastName">{{item[4]}}</td>
+                    <td id="rowemail">{{item[5]}}</td>
+                    <td id="rowphoneNumber">{{item[6]}}</td>
+                    <td id="rowposition">{{item[7]}}</td>
+                    <td id=""><img src="/static/info.png" id="btn{{item[0]}}" onclick="showInfo(this.id)"></td>
+                </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+        <div class="row col-xs-2 col-sm-2 col-md-3 col-lg-3">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <h5  style="color: #1C384B; font-family: 'Lato', sans-serif;">Current Task</h5>
+            </div>
+            {% from "includes/_formhelpers.html" import render_field %}
+            <form method="POST" action="" style="background-color: #DCDCDC; width: 350px; padding-left: 20px; padding-right: 20px; padding-top: 20px; padding-bottom: 20px; border-radius:5px;">
+                <!--<div class="form-group">
+                    <dt>
+                        <label for="userID">User ID</label>
+                    </dt>
+                    <dd>
+                        <input class="form-control" id="userID" name="userID" value="">
+                    </dd>
+                </div>-->
+                <div class="form-group">
+                    {{render_field(form.userID, class_="form-control")}}
+                </div>
+                <div class="form-group">
+                    {{render_field(form.userName, class_="form-control")}}
+                </div>
+                <div class="form-group">
+                    {{render_field(form.firstName, class_="form-control")}}
+                </div>
+                <div class="form-group">
+                    {{render_field(form.lastName, class_="form-control")}}
+                </div>
+                <div class="form-group">
+                    {{render_field(form.email, class_="form-control")}}
+                </div>
+                <div class="form-group">
+                    {{render_field(form.phoneNumber, class_="form-control")}}
+                </div>
+                <div class="form-group">
+                    {{render_field(form.position, class_="form-control")}}
+                </div>
+                <div hidden class="form-group">
+                    {{render_field(form.formKey, class_="form-control")}}
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <hr  style="width: 100%; border-top: 1px solid gray;">
+                </div>
+                {% for set in catSkills %}
+                <div hidden id="catShow{{set[0][0]}}">
+                    <dt>
+                        <label for="currentCatSkills{{set[0][0]}}">Category/Skillsets</label>
+                    </dt>
+                    <dd>
+                        <div id="currentCatSkills{{set[0][0]}}">
+                            <ul id="list{{set[0][0]}}">
+                                {% for item in set %}
+                                <li id="{{item[2]}}" style="font-size: 12px;"><b>{{item[3]}}:</b> {{item[4]}}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </dd>
+                </div>
+                {% endfor %}
+                <p><input id="editBtn" type="button" href="/index" class="btn btn-primary" data-toggle="modal" data-target="#editModal" disabled value="Edit" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+                <p><input id="delBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteModal" disabled value="Delete" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+                <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel">Deletion Confirmation</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete this user?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                <button type="submit" class="btn btn-primary" onclick="updateKey('delete')">Yes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModalLabel">Edit Confirmation</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to edit this user?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                <button type="submit"  class="btn btn-primary" onclick="updateKey('edit')">Yes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $( document ).ready(function() {
+        $('#userID').attr("readonly","readonly");
+        $('#userName').attr("readonly","readonly");
+        $('#firstName').attr("readonly","readonly");
+        $('#lastName').attr("readonly","readonly");
+        $('#email').attr("readonly","readonly");
+        $('#phoneNumber').attr("readonly","readonly");
+        $('#position').attr("readonly","readonly");
+    });
+
+    currentCS = 0;
+    function showInfo(id){
+        var num = id.substring(3);
+        $('#row'+num).find('td').each(function () {
+            var objID = $(this).attr("id");
+            if(objID != "") {
+                objID = objID.substring(3);
+                $('#' + objID).val($(this).text());
+            }
+        });
+        if (currentCS != num){
+            $('#catShow'+num).removeAttr('hidden');
+            $('#row'+num).css("background-color", "#1C384B");
+            $('#catShow'+currentCS).attr('hidden', true);
+            $('#row'+currentCS).css("background-color", "#63C9E4");
+            currentCS = num;
+        }
+        $('#delBtn').css("background-color", '#E84348');
+        $('#editBtn').css("background-color", '#FDC14A');
+        $('#delBtn').removeAttr('disabled');
+        $('#editBtn').removeAttr('disabled');
+    }
+
+    function updateKey(str){
+        $('#formKey').val(str);
+    }
+</script>
+{% endblock %}

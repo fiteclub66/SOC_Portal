@@ -70,10 +70,8 @@ def getDB():
     return mysql.connector.connect(user='root', password='MyR00t1423!',
                               host='10.0.51.21',
                              database='SOC_Portal')
-def populateTable():
-    db = mysql.connector.connect(user='root', password='MyR00t1423!',
-                              host='10.0.51.21',
-                             database='SOC_Portal')
+def populateAnalystTable():
+    db = getDB()
 
 
     cur = db.cursor(buffered=True)

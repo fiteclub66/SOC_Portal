@@ -1,20 +1,15 @@
-{% extends 'layout.html' %}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>ADD NEW TASK</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'managerHeader.html' %}
 
 {% block body %}
 
 <div class="container-fluid">
-    <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-top: 20px">
-        <div class="col-xs-12 col-sm-5 col-md-6 col-lg-3">
-            <img src="/static/Cybriant_Logo.png" height="60px" width="300px">
-        </div>
-        <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2" style="color: #1C384B; padding-top: 20px">
-            <a href="/taskQueue" style="color:#1C384B; text-decoration: none"><h3 style="font-family: 'Lato', sans-serif;">Hub Page</h3></a>
-        </div>
-        <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2" style="color: #1C384B; padding-top: 20px">
-            <a href="/overview" style="color:#1C384B; text-decoration: none"><h3 style="font-family: 'Lato', sans-serif;">Overview</h3></a>
-        </div>
-    </div>
-    <hr style="border-width: 3px">
     <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="font-family: 'Lato', sans-serif; padding-left: 4%; padding-top: 50px">
             <h4 color="#1C384B">Add New Task</h4>
@@ -41,16 +36,16 @@
                     </select>
                 </dd>
             </div>
-            {% for set in catSkills %}
-            <div hidden class="form-group" id="catSel{{set[0][0]}}">
+            {% for item in catSkills %}
+            <div hidden class="form-group" id="catSel{{item[0][0]}}">
                 <dt>
-                    <label for="categorySelect{{set[0][0]}}">Category/Skillset</label>
+                    <label for="categorySelect{{item[0][0]}}">Category/Skillset</label>
                 </dt>
                 <dd>
-                    <select class="form-control select" id="categorySelect{{set[0][0]}}" onchange="">
+                    <select class="form-control select" id="categorySelect{{item[0][0]}}" onchange="">
                         <option value="-1" disabled selected="selected">Select Category/Skillset</option>
-                        {% for item in set %}
-                                <option value = "{{item[2]}}" name = "{{item[4]}}">{{item[3]}} - {{item[4]}}</option>
+                        {% for set in item %}
+                        <option value = "{{set[2]}}" name = "{{set[4]}}"><b>{{set[3]}}:</b> {{set[4]}}</option>
                         {% endfor %}
                     </select>
                 </dd>
@@ -75,7 +70,16 @@
                             <label for="recurringStart">Start Date</label>
                         </dt>
                         <dd>
-                            <div id="recurringStart">DATE PICKER HERE</div>
+                            <div id="recurringStart">
+                                <div class="form-group">
+                                    <div class="input-group date" id="datetimepicker7" data-target-input="nearest">
+                                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker7"/>
+                                        <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </dd>
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -83,7 +87,16 @@
                             <label for="recurringEnd">End Date</label>
                         </dt>
                         <dd>
-                            <div id="recurringEnd">DATE PICKER HERE</div>
+                            <div id="recurringEnd">
+                                <div class="form-group">
+                                    <div class="input-group date" id="datetimepicker8" data-target-input="nearest">
+                                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker8"/>
+                                        <div class="input-group-append" data-target="#datetimepicker8" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </dd>
                     </div>
                 </div>
@@ -169,6 +182,19 @@
     </div>
 </div>
 <script type="text/javascript">
+
+    $(function () {
+        $('#datetimepicker7').datetimepicker();
+        $('#datetimepicker8').datetimepicker({
+            useCurrent: false
+        });
+        $("#datetimepicker7").on("change.datetimepicker", function (e) {
+            $('#datetimepicker8').datetimepicker('minDate', e.date);
+        });
+        $("#datetimepicker8").on("change.datetimepicker", function (e) {
+            $('#datetimepicker7').datetimepicker('maxDate', e.date);
+        });
+    });
 
     currentC = 0;
     function catSelect(){
