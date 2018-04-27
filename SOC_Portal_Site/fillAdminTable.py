@@ -74,7 +74,7 @@ def populateAdminTable():
     db = getDB()
     
     cur = db.cursor(buffered=True)
-    q1 = ("SELECT t2.taskID, t2.clientName, t2.taskName, t1.category, t1.skillset, t2.startDate, t2.endDate, t2.freqType, t2.frequency, t2.totalTime, t2.status, t2.SLA, t2.specialNotes, t2.counter, t2.subTask FROM ((SELECT * FROM CategoryRelations) t1 INNER JOIN (SELECT * FROM UpcomingTasks ORDER BY startDate LIMIT 10) t2 ON (t1.catSkillID = t2.catSkillID)) ORDER BY taskID ASC")
+    q1 = ("SELECT t2.taskID, t2.clientName, t2.taskName, t1.category, t1.skillset, t2.startDate, t2.endDate, t2.freqType, t2.frequency, t2.totalTime, t2.status, t2.SLA, t2.specialNotes, t2.counter, t2.subTask FROM ((SELECT * FROM CategoryRelations) t1 INNER JOIN (SELECT * FROM UpcomingTasks ORDER BY startDate) t2 ON (t1.catSkillID = t2.catSkillID)) ORDER BY taskID ASC")
     cur.execute(q1)
     tList = []
     for item in cur:
@@ -88,7 +88,7 @@ def populatePastTasks():
     db = getDB()
     
     cur = db.cursor(buffered=True)
-    q1 = ("SELECT k2.taskID, k2.clientName, k2.taskName, k2.category, k2.skillset, k1.userID, k1.username, k2.startDate, k2.endDate, k2.freqType, k2.frequency, k2.totalTime, k2.status, k2.SLA, k2.specialNotes, k2.counter, k2.subTask, k2.reason FROM ((SELECT userID, username FROM Users) k1 INNER JOIN (SELECT t2.taskID, t2.clientName, t2.taskName, t1.category, t1.skillset, t2.startDate, t2.endDate, t2.freqType, t2.frequency, t2.totalTime, t2.status, t2.SLA, t2.userID, t2.specialNotes, t2.counter, t2.subTask, t2.reason FROM ((SELECT * FROM CategoryRelations) t1 INNER JOIN (SELECT * FROM PastTasks ORDER BY startDate) t2 ON (t1.catSkillID = t2.catSkillID))) k2 ON k1.userID = k2.userID) ORDER BY taskID ASC")
+    q1 = ("SELECT k2.taskID, k2.clientName, k2.taskName, k2.category, k2.skillset, k1.userID, k1.username, k2.startDate, k2.endDate, k2.freqType, k2.frequency, k2.totalTime, k2.status, k2.SLA, k2.specialNotes, k2.counter, k2.subTask, k2.reason FROM ((SELECT userID, username FROM Users) k1 INNER JOIN (SELECT t2.taskID, t2.clientName, t2.taskName, t1.category, t1.skillset, t2.startDate, t2.endDate, t2.freqType, t2.frequency, t2.totalTime, t2.status, t2.SLA, t2.userID, t2.specialNotes, t2.counter, t2.subTask, t2.reason FROM ((SELECT * FROM CategoryRelations) t1 INNER JOIN (SELECT * FROM PastTasks ORDER BY startDate DESC ) t2 ON (t1.catSkillID = t2.catSkillID))) k2 ON k1.userID = k2.userID) ORDER BY taskID ASC")
     cur.execute(q1)
     tList = []
     for item in cur:

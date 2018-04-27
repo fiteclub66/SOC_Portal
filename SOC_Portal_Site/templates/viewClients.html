@@ -5,7 +5,11 @@
     <title>CLIENT LIST</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-{% extends 'adminHeader.html' %}
+{% if session['position'] == "Manager" %}
+    {% extends 'managerHeader.html' %}
+{% elif session['position'] == "Admin" %}
+    {% extends 'adminHeader.html' %}
+{% endif %}
 {% block body %}
 
 <div class="container-fluid">
@@ -22,10 +26,8 @@
                     <th>Client Name</th>
                     <th>Email</th>
                     <th>Phone Number</th>
-                    <th>
-                        <div class="float-right">
-                            <a href="/addNewClient"><button class="btn btn-success" name="createButton" style="background-color: #7DDF64; color: white;">Create</button></a>
-                        </div>
+                    <th align="middle">
+                        <a href="/addNewClient"><button class="btn btn-success" name="createButton" style="background-color: #7DDF64; color: white;">Create</button></a>
                     </th>
                 </tr>
                 </thead>
@@ -46,7 +48,7 @@
                         <td id="rowclientName">{{item[1]}}</td>
                         <td id="rowclientEmail">{{item[2]}}</td>
                         <td id="rowclientPhone">{{item[3]}}</td>
-                        <td id=""><img src="/static/info.png" id="btn{{item[0]}}" onclick="showInfo(this.id)"></td>
+                        <td id="" align="middle" width="50px"><img src="/static/info.png" id="btn{{item[0]}}" onclick="showInfo(this.id)"></td>
                     </tr>
                 {% endfor %}
 
@@ -55,10 +57,11 @@
         </div>
         <div class="row col-xs-2 col-sm-2 col-md-3 col-lg-3">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <h5  style="color: #1C384B; font-family: 'Lato', sans-serif;">Current Task</h5>
+                <h5  style="color: #1C384B; font-family: 'Lato', sans-serif;">Client Info</h5>
             </div>
             {% from "includes/_formhelpers.html" import render_field %}
             <form method="POST" action="" style="background-color: #DCDCDC; padding-left: 20px; padding-right: 20px; padding-top: 20px; padding-bottom: 20px; border-radius:5px;">
+                <button id="editBtn" disabled onclick="updateKey('edit')" type="button" data-toggle="modal" data-target="#editModal" class="btn btn-sm" style="float:right;">EDIT</button>
                 <div class="form-group">
                     {{render_field(form.clientID, class_="form-control")}}
                 </div>
@@ -93,7 +96,7 @@
                     </dd>
                 </div>
                 {% endfor %}
-                <p><input id="editBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" disabled value="Edit" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+
                 <p><input id="delBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteModal" disabled value="Delete" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
                 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -140,6 +143,7 @@
 
 <script type="text/javascript">
     $( document ).ready(function() {
+        $('#queue').DataTable();
         $('#clientName').attr("readonly","readonly");
         $('#clientEmail').attr("readonly","readonly");
         $('#clientID').attr("readonly","readonly");
@@ -164,7 +168,6 @@
             currentCS = num;
         }
         $('#delBtn').css("background-color", '#E84348');
-        $('#editBtn').css("background-color", '#FDC14A');
         $('#delBtn').removeAttr('disabled');
         $('#editBtn').removeAttr('disabled');
     }

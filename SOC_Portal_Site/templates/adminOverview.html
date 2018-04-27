@@ -9,5 +9,52 @@
     {% extends 'adminHeader.html' %}
 
     {% block body %}
-    <h1>THIS IS THE ADMIN OVERVIEW</h1>
+    <div class="container-fluid">
+        <br><br>
+        <div align="middle" class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                <div style="width:90%; height:150px; border-radius: 5px; background-color: #DCDCDC; border-bottom-color: #BCBCBC; border-top-color: #1C384B">
+                    <dd>
+                        <h2 id="metric1" style="font-size:90px; padding-top: 25px;" align="middle">{{metrics[0][1]}}</h2>
+                    </dd>
+                </div>
+                <dt>
+                    <label for="metric1">Tasks Completed</label>
+                </dt>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                <div style="width:90%; height:150px; border-radius: 5px; background-color: #DCDCDC; border-bottom-color: #BCBCBC; border-top-color: #1C384B">
+                    <dd style="background-color: #DCDCDC; border-bottom-color: #BCBCBC; border-top-color: #1C384B">
+                        <h2 id="metric2" style="font-size:90px; padding-top: 25px;" align="middle">{{metrics[0][2]}}</h2>
+                    </dd>
+                </div>
+                <dt>
+                    <label for="metric2">SLA Ratio</label>
+                </dt>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                <div style="width:90%; height:150px; border-radius: 5px; background-color: #DCDCDC; border-bottom-color: #BCBCBC; border-top-color: #1C384B">
+                    <dd style="background-color: #DCDCDC; border-bottom-color: #BCBCBC; border-top-color: #1C384B">
+                        <h2 id="metric3" style="font-size:90px; padding-top: 25px;" align="middle">{{metrics[0][3]}}</h2>
+                    </dd>
+                </div>
+                <dt>
+                    <label for="metric3">Tasks Escalated</label>
+                </dt>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                <div style="width:90%; height:150px; border-radius: 5px; background-color: #DCDCDC; border-bottom-color: #BCBCBC; border-top-color: #1C384B">
+                    <dd style="background-color: #DCDCDC; border-bottom-color: #BCBCBC; border-top-color: #1C384B">
+                        <h2 id="metric4" style="font-size:90px; padding-top: 25px;" align="middle">{{metrics[0][4]}}</h2>
+                    </dd>
+                </div>
+                <dt>
+                    <label for="metric4">Completion Ratio</label>
+                </dt>
+            </div>
+        </div>
+        <div align="middle">
+            <img src="/static/graph_mock.png" style="width: 70%; height: 70%;">
+        </div>
+    </div>
     {% endblock %}

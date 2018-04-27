@@ -10,6 +10,7 @@
 
 <div class="container-fluid">
     <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <p style="padding-left: 20px;"><input id="backBtn" type="button" class="btn btn-primary btn-danger" onclick="updateKey('back')" data-toggle="modal" data-target="#backModal" value="Back" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="font-family: 'Lato', sans-serif; padding-left: 4%; padding-top: 50px">
             <h4 color="#1C384B">Edit Client</h4>
         </div >
@@ -67,6 +68,9 @@
                 <div hidden class="form-group">
                     {{render_field(form.catSkills, class_="form-control")}}
                 </div>
+                <div hidden class="form-group">
+                    {{render_field(form.formKey, class_="form-control")}}
+                </div>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <hr  style="width: 100%; border-top: 1px solid gray;">
                 </div>
@@ -83,7 +87,45 @@
                         </select>
                     </dd>
                 </div>
-                <p><input id="compBtn" type="submit" class="btn btn-primary" onclick="complete()" value="Save" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+                <p><input id="compBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal" value="Save" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+                <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="confirmModalLabel">Save Edits Confirmation</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to save the task edits?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                <button  class="btn btn-primary" onclick="complete('edit')" type="submit" >Yes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="backModal" tabindex="-1" role="dialog" aria-labelledby="backModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModalLabel">Leaving Page?</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to leave the page?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                <button type="submit"  class="btn btn-primary" onclick="updateKey('back')">Yes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></div>
@@ -133,7 +175,7 @@
         $('#Sel'+listItem).remove();
     }
 
-    function complete(){
+    function complete(key){
         var cS="";
         $("li").each(function (){
             var txt = $(this).attr("id");
@@ -147,6 +189,11 @@
         $('#clientName').val($('#cName').val());
         $('#clientEmail').val($('#cMail').val());
         $('#clientPhone').val($('#cPhone').val());
+
+        updateKey(key);
+    }
+    function updateKey(str){
+        $('#formKey').val(str);
     }
 
 </script>

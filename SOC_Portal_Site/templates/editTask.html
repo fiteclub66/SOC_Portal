@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>EDIT TASK</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% extends 'layout.html' %}
+    {% block body %}
+
+<div class="container-fluid">
+    <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <p style="padding-left: 20px;"><input id="backBtn" type="submit" class="btn btn-primary btn-danger" onclick="updateKey('back')" data-toggle="modal" data-target="#backModal" value="Back" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="font-family: 'Lato', sans-serif; padding-left: 4%; padding-top: 50px">
+            <h4 color="#1C384B">Edit Task</h4>
+        </div >
+        </div>
+    <br>
+    {% from "includes/_formhelpers.html" import render_field %}
+    <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" ></div>
+        <form method="POST" action="">
+            <div class="form-group">
+                <dt>
+                    <label for="taskNameInput">Task Name</label>
+                </dt>
+                <dd>
+                    <input class="form-control" id="taskNameInput" name="taskNameInput" type="text" value="{{tasks[2]}}">
+                </dd>
+            </div>
+            <div class="form-group">
+                <dt>
+                    <label for="clientSelect">Client</label>
+                </dt>
+                <dd>
+                    <select class="form-control" id="clientSelect" onchange="catSelect()">
+                        <option value="-1" disabled selected="selected">Select Client</option>
+                        {% for client in clients %}
+                        <option value = {{client[0]}}>{{client[1]}}</option>
+                        {% endfor %}
+                    </select>
+                </dd>
+            </div>
+            {% for item in catSkills %}
+            <div hidden class="form-group" id="catSel{{item[0][0]}}">
+                <dt>
+                    <label for="categorySelect{{item[0][0]}}">Category/Skillset</label>
+                </dt>
+                <dd>
+                    <select class="form-control select" id="categorySelect{{item[0][0]}}" onchange="">
+                        <option value="-1" disabled selected="selected">Select Category/Skillset</option>
+                        {% for set in item %}
+                        <option value = "{{set[2]}}" name = "{{set[4]}}"><b>{{set[3]}}:</b> {{set[4]}}</option>
+                        {% endfor %}
+                    </select>
+                </dd>
+            </div>
+            {% endfor %}
+            <div class="form-group">
+                <dt >
+                    <label for="taskTypeSelector">Task Type</label>
+                </dt>
+                <dd>
+                    <select class="form-control select" id="taskTypeSelector" onchange="showMenu(this.id)">
+                        <option value="-1" disabled selected="selected">Select Task Type</option>
+                        <option value="0">Singular</option>
+                        <option value="1">Recurring</option>
+                    </select>
+                </dd>
+            </div>
+            <div id="recurringMenu" hidden class="form-group row " style="background-color: #DCDCDC; width: 500px; padding-top: 10px; padding-bottom: 20px; border-radius:5px;">
+                <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <dt>
+                            <label for="recurringStart">Start Date</label>
+                        </dt>
+                        <dd>
+                            <div id="recurringStart">
+                                <div class="form-group">
+                                    <input type="text" id="datepicker1">
+                                    <select class="form-control select" id="startTime">
+                                        <option value="-1" disabled selected="selected">Select Time</option>
+                                        <option value="00:00">00:00</option>
+                                        <option value="01:00">01:00</option>
+                                        <option value="02:00">02:00</option>
+                                        <option value="03:00">03:00</option>
+                                        <option value="04:00">04:00</option>
+                                        <option value="05:00">05:00</option>
+                                        <option value="06:00">06:00</option>
+                                        <option value="07:00">07:00</option>
+                                        <option value="08:00">08:00</option>
+                                        <option value="09:00">09:00</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="16:00">16:00</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="19:00">19:00</option>
+                                        <option value="20:00">20:00</option>
+                                        <option value="21:00">21:00</option>
+                                        <option value="22:00">22:00</option>
+                                        <option value="23:00">23:00</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </dd>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <dt>
+                            <label for="recurringEnd">End Date</label>
+                        </dt>
+                        <dd>
+                            <div id="recurringEnd">
+                                <div class="form-group">
+                                    <input type="text" id="datepicker2">
+                                    <select class="form-control select" id="endTime">
+                                        <option value="-1" disabled selected="selected">Select Time</option>
+                                        <option value="00:00">00:00</option>
+                                        <option value="01:00">01:00</option>
+                                        <option value="02:00">02:00</option>
+                                        <option value="03:00">03:00</option>
+                                        <option value="04:00">04:00</option>
+                                        <option value="05:00">05:00</option>
+                                        <option value="06:00">06:00</option>
+                                        <option value="07:00">07:00</option>
+                                        <option value="08:00">08:00</option>
+                                        <option value="09:00">09:00</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="16:00">16:00</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="19:00">19:00</option>
+                                        <option value="20:00">20:00</option>
+                                        <option value="21:00">21:00</option>
+                                        <option value="22:00">22:00</option>
+                                        <option value="23:00">23:00</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </dd>
+                    </div>
+                </div>
+                <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <hr  style="width: 90%; border-top: 1px solid gray;">
+                </div>
+                <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <div class="radio">
+                            <label><input type="radio" name="optradio" id="Minutely" value="Minutely" onclick="setInfo(this.value)"> Minutely</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="optradio" id="Hourly" value="Hourly" onclick="setInfo(this.value)"> Hourly</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="optradio" id="Daily" value="Daily" onclick="setInfo(this.value)"> Daily</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="optradio" id="Weekly" value="Weekly" onclick="setInfo(this.value)"> Weekly</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="optradio" id="Monthly" value="Monthly" onclick="setInfo(this.value)"> Monthly</label>
+                        </div>
+                    </div>
+                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="border-left: 1px solid gray; height: 100%;"></div>
+                    <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+                        <div hidden id="MinutelyOpt">
+                            Repeat every <select class="form-control select" id="minuteFreq">
+                            <option value="15">15</option>
+                            <option value="30">30</option>
+                        </select> minutes.
+                        </div>
+                        <div hidden id="HourlyOpt">
+                            Repeat every <select class="form-control select" id="hourFreq">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="4">4</option>
+                            <option value="6">6</option>
+                            <option value="8">8</option>
+                            <option value="12">12</option>
+                        </select> hours.
+                        </div>
+                        <div hidden id="DailyOpt">
+                            Task will repeat every day.
+                        </div>
+                        <div hidden id="WeeklyOpt">
+                            Task will repeat every week.
+                        </div>
+                        <div  hidden id="MonthlyOpt">
+                            Task will repeat every month.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="singularMenu" hidden class="form-group row col-xs-12 col-sm-12 col-md-12 col-lg-12" style="background-color: #DCDCDC; width: 500px; padding-right: 20px; padding-top: 10px; padding-bottom: 20px; border-radius:5px;">
+                <div>
+                    <dt>
+                        <label for="singularSelect">Start Date</label>
+                    </dt>
+                    <dd>
+                        <div id="singularSelect">
+                            <div class="form-group">
+                                <input type="text" id="datepicker3">
+                                <select class="form-control select" id="dueTime">
+                                    <option value="-1" disabled selected="selected">Select Time</option>
+                                    <option value="00:00">00:00</option>
+                                    <option value="01:00">01:00</option>
+                                    <option value="02:00">02:00</option>
+                                    <option value="03:00">03:00</option>
+                                    <option value="04:00">04:00</option>
+                                    <option value="05:00">05:00</option>
+                                    <option value="06:00">06:00</option>
+                                    <option value="07:00">07:00</option>
+                                    <option value="08:00">08:00</option>
+                                    <option value="09:00">09:00</option>
+                                    <option value="10:00">10:00</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="12:00">12:00</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="14:00">14:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="16:00">16:00</option>
+                                    <option value="17:00">17:00</option>
+                                    <option value="18:00">18:00</option>
+                                    <option value="19:00">19:00</option>
+                                    <option value="20:00">20:00</option>
+                                    <option value="21:00">21:00</option>
+                                    <option value="22:00">22:00</option>
+                                    <option value="23:00">23:00</option>
+                                </select>
+                            </div>
+                        </div>
+                    </dd>
+                </div>
+            </div>
+            <input hidden id="clientNameInput" name="clientNameInput" type="text" value="{{tasks[1]}}">
+            <input hidden id="catSkillIDInput" name="catSkillIDInput" type="text" value="{{tasks[3]}}">
+            <input hidden id="freqTypeInput" name="freqTypeInput" type="text" value="{{tasks[8]}}">
+            <input hidden id="frequencyInput" name="frequencyInput" type="text" value="{{tasks[9]}}">
+            <div hidden class="form-group">
+                {{render_field(form.taskName, class_="form-control")}}
+            </div>
+            <div hidden class="form-group">
+                {{render_field(form.clientName, class_="form-control")}}
+            </div>
+            <div hidden class="form-group">
+                {{render_field(form.category, class_="form-control")}}
+            </div>
+            <div hidden class="form-group">
+                {{render_field(form.skillset, class_="form-control")}}
+            </div>
+            <div hidden class="form-group">
+                {{render_field(form.freqType, class_="form-control")}}
+            </div>
+            <div hidden class="form-group">
+                {{render_field(form.frequency, class_="form-control")}}
+            </div>
+            <div hidden class="form-group">
+                {{render_field(form.formKey, class_="form-control")}}
+            </div>
+            <div hidden class="form-group">
+                {{render_field(form.startDate, class_="form-control")}}
+            </div>
+            <div hidden class="form-group">
+                {{render_field(form.endDate, class_="form-control")}}
+            </div>
+            <p><input id="compBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal" value="Save" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+            <p><input id="delBtn" type="button" class="btn btn-primary btn-danger" data-toggle="modal" data-target="#deleteModal" value="Delete" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+            <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmModalLabel">Save Edits Confirmation</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to save the task edits?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            <button  class="btn btn-primary" onclick="complete('edit')" type="submit" >Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Delete Task Confirmation</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete this task and all it's instances?
+                            <p></p>
+                            <i>WARNING: This is irreversible.</i>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            <button  class="btn btn-primary" onclick="complete('delete')" type="submit" >Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="backModal" tabindex="-1" role="dialog" aria-labelledby="backModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editModalLabel">Leaving Page?</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to leave the page?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            <button type="submit"  class="btn btn-primary" onclick="updateKey('back')">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(' document ').ready(function(){
+        var cName = $('#clientNameInput').val();
+        var cCS = $('#catSkillIDInput').val();
+        var num = 0;
+        $("#clientSelect > option").each(function() {
+            if(this.text == cName){
+                $("#clientSelect").val(this.value);
+                num = this.value;
+            }
+        });
+
+        var selName = ('categorySelect'+num+"");
+        $(".select > option").each(function() {
+            if(this.value == cCS){
+                $("#"+selName).val(this.value);
+            }
+        });
+        var fType = $('#freqTypeInput').val();
+        if (fType == "Singular") {
+            $('#taskTypeSelector').val(0);
+        }
+        else {
+            $('#taskTypeSelector').val(1);
+        }
+        showMenu("taskTypeSelector");
+        switch(fType){
+            case "Minutely": $("#Minutely").prop("checked", true);
+                $('#minuteFreq').val($('#frequencyInput').val());
+                setInfo("Minutely");
+                break;
+            case "Hourly": $("#Hourly").prop("checked", true);
+                $('#hourFreq').val($('#frequencyInput').val());
+                setInfo("Hourly");
+                break;
+            case "Daily": $("#Daily").prop("checked", true);
+                setInfo("Daily");
+                break;
+            case "Weekly": $("#Weekly").prop("checked", true);
+                setInfo("Weekly");
+                break;
+            case "Monthly": $("#Monthly").prop("checked", true);
+                setInfo("Monthly");
+                break;
+        }
+        catSelect();
+    });
+
+    $(function () {
+        $( "#datepicker1" ).datepicker();
+        $( "#datepicker2" ).datepicker();
+        $( "#datepicker3" ).datepicker();
+
+    });
+
+    currentC = 0;
+    function catSelect(){
+        cID = $("#clientSelect").find(':selected').val();
+        if (currentC != cID) {
+            $('#catSel'+cID).removeAttr('hidden');
+            $('#catSel'+currentC).attr('hidden', true);
+            $('#skiSel'+currentC).attr('hidden', true);
+        }
+        currentC = cID;
+    }
+
+    currentV = "";
+    function setInfo(v){
+        var s = (v);
+        if (currentV != s){
+            $('#'+s+"Opt").removeAttr('hidden');
+            $('#'+currentV+"Opt").attr('hidden', true);
+        }
+        currentV = s;
+    }
+    var recurring = false;
+    function showMenu(id){
+        var num = $("#"+id).find(':selected').val();
+        if (num==0){
+            $('#singularMenu').removeAttr('hidden');
+            $('#recurringMenu').attr('hidden', true);
+            recurring = false;
+        }
+        else if (num==1){
+            $('#recurringMenu').removeAttr('hidden');
+            $('#singularMenu').attr('hidden', true);
+            recurring = true;
+        }
+    }
+
+    function complete(key){
+        if (recurring){
+            var startDate = (($('#datepicker1').val())+" "+($("#startTime").find(':selected').text()));
+            var endDate = (($('#datepicker2').val())+" "+($("#endTime").find(':selected').text()));
+
+            var temp = startDate.split(" ");
+            var dates = temp[0].split("/");
+            var times = temp[1].split(":");
+            var sD = (dates[2]+","+dates[0]+","+dates[1]+","+times[0]);
+
+            var temp2 = endDate.split(" ");
+            var dates2 = temp2[0].split("/");
+            var times2 = temp2[1].split(":");
+            var eD = (dates2[2]+","+dates2[0]+","+dates2[1]+","+times2[0]);
+
+            $('#startDate').val(sD);
+            $('#endDate').val(eD);
+        }
+        else{
+            var singleDate = (($('#datepicker3').val())+" "+($("#dueTime").find(':selected').text()));
+            var temp3 = singleDate.split(" ");
+            var dates3 = temp3[0].split("/");
+            var times3 = temp3[1].split(":");
+            var single = (dates3[2]+","+dates3[0]+","+dates3[1]+","+times3[0]);
+            $('#startDate').val(single);
+            $('#endDate').val(single);
+
+        }
+
+        var tName = $('#taskNameInput').val();
+        $('#taskName').val(tName);
+        //    CLIENT NAME EQUAL TO CLIENT SELECT
+        var client = $('#clientSelect').find(':selected').text();
+        $('#clientName').val(client);
+        //    CATEGORY EQUAL TO CATEGORY SELECT
+        var cID = $("#clientSelect").find(':selected').val();
+        var cat = $('#categorySelect'+cID).find(':selected').attr("value");
+        $('#category').val(cat);
+        //    SKILLSET EQUAL TO SKILLSET SELECT
+        var sID = $("#clientSelect").find(':selected').val();
+        var ski = $('#categorySelect'+sID).find(':selected').attr("name");
+        $('#skillset').val(ski);
+        //    START AND END DATES EQUAL TO DATEPICKERS
+        //    FREQTYPE SET TO OPTION RADIO
+        var taskType = $('#taskTypeSelector').find(':selected').val();
+        var checked = "";
+        if (taskType == 0){
+            $('#freqType').val("Singular");
+        }
+        else if (taskType == 1){
+            checked = $('input[name="optradio"]').filter(':checked').val();
+            $('#freqType').val(checked);
+        }
+        //    FREQUENCY SET TO CORRESPONDING DROPDOWN
+        switch (checked){
+            case "":
+                $('#frequency').val(1);
+                break;
+
+            case "Minutely":
+                $('#frequency').val($('#minuteFreq').find(':selected').val());
+                break;
+
+            case "Hourly":
+                $('#frequency').val($('#hourFreq').find(':selected').val());
+                break;
+
+            case "Daily":
+                $('#frequency').val(1);
+                break;
+
+            case "Weekly":
+                $('#frequency').val(1);
+                break;
+
+            case "Monthly":
+                $('#frequency').val(1);
+                break;
+        }
+        updateKey(key);
+
+    }
+    function updateKey(str){
+        $('#formKey').val(str);
+    }
+
+
+
+</script>
+{% endblock %}

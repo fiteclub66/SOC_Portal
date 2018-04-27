@@ -19,6 +19,7 @@
                 <thead>
                 <tr style="color: #1C384B; background-color: white; font-size: 18;">
                     <th>Task ID</th>
+                    <th>Task Name</th>
                     <th>Client Name</th>
                     <th>Category</th>
                     <th>Skillset</th>
@@ -42,13 +43,15 @@
                 </tfoot> -->
                 <tbody id="queueBod" style="margin-bottom: 10px;">
                 {% for task in tasks %}
-                <tr id="{{task[3]}}" name="row{{loop.index}}" style="background-color: #63C9E4; color: white; font-size: 18;  border-top: 2px solid white">
-                    <td style="padding-left: 20px;" >{{task[3]}}</td>
-                    <td>{{task[4]}}</td>
-                    <td>{{task[1]}}</td>
-                    <td>{{task[2]}}</td>
-                    <td>{{task[7]}}</td>
-                    <td hidden>{{task[13]}}</td>
+                <tr id="row{{task[3]}}" name="row{{loop.index}}" style="background-color: #63C9E4; color: white; font-size: 18;  border-top: 2px solid white">
+                    <td id="rowtaskID" style="padding-left: 20px;" >{{task[3]}}</td>
+                    <td id="rowtaskName">{{task[5]}}</td>
+                    <td id="rowclientName">{{task[4]}}</td>
+                    <td id="rowcategory">{{task[1]}}</td>
+                    <td id="rowskillset">{{task[2]}}</td>
+                    <td id="rowstartDate">{{task[7]}}</td>
+                    <td id="" hidden>{{task[13]}}</td>
+                    <td id="" style="padding-left: 40px; padding-right: 20px;"><img src="/static/info.png" class="infBtn" id="btn{{task[3]}}" onclick="showInfo(this.id)"></td>
                 </tr>
                 {% endfor %}
 
@@ -62,8 +65,12 @@
             </div>
             {% from "includes/_formhelpers.html" import render_field %}
             <form method="POST" action="" style="background-color: #DCDCDC; padding-left: 30px; padding-right: 30px; padding-top: 20px; padding-bottom: 20px; border-radius:5px;">
+                <button id="editBtn" disabled onclick="updateKey('edit')" type="submit" class="btn btn-sm" style="float:right;">EDIT</button>
                 <div class="form-group">
                     {{render_field(form.taskID, class_="form-control")}}
+                </div>
+                <div class="form-group">
+                    {{render_field(form.taskName, class_="form-control")}}
                 </div>
                 <div class="form-group">
                     {{render_field(form.clientName, class_="form-control")}}
@@ -89,6 +96,12 @@
                 <div hidden class="form-group">
                     {{render_field(form.reason, class_="text-area form-control")}}
                 </div>
+                <div hidden class="form-group">
+                    {{render_field(form.SLA, class_="text-area form-control")}}
+                </div>
+                <div hidden class="form-group">
+                    {{render_field(form.formKey, class_="text-area form-control")}}
+                </div>
                 <div><hr></div>
                 <div class="form-group">
                     <dt>
@@ -98,9 +111,10 @@
                         <p id="timer" style="font-family: 'Lato', sans-serif; font-size: 30px; text-align: center;"><time>00:00:00</time></p>
                     </dd>
                 </div>
-                <p><input id="compBtn" type="submit" class="btn btn-primary" onclick="complete()" disabled value="Complete" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+                <p><input id="startBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal" disabled value="Start" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+                <p><input hidden id="compBtn" type="submit" class="btn btn-primary" onclick="complete()" disabled value="Complete" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
                 <p><input id="skipBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#skipModal" disabled value="Skip" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
-                <p><input id="escBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#escModal" disabled value="Escalate" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+                <p><input hidden id="escBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#escModal" disabled value="Escalate" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
                 <!-- CONFIRMATION MODAL-->
                 <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -185,17 +199,16 @@
 
 </div>
 <script type="text/javascript">
+    var running = false;
     //DOES SOME LAST MINUTE FORMATTING TO THE PAGE
     $(document).ready(function topBar(){
-        tBod = $('#queueBod');
-        tRow = tBod.find("tr:nth-child(1)");
-        tRow.css("background-color", "#1C384B");
-        tRow.append('<td style="padding-left: 40px; padding-right: 20px;">'+'<img id="pickTask" src="/static/arrow.png" width="30px" height="25px" data-toggle="modal" data-target="#confirmModal">'+'</td>');
+        $('#queue').DataTable();
         $('#taskID').attr("readonly","readonly");
         $('#clientName').attr("readonly","readonly");
         $('#category').attr("readonly","readonly");
         $('#skillset').attr("readonly","readonly");
         $('#startDate').attr("readonly","readonly");
+        $('#taskName').attr("readonly","readonly");
         $('#taskID').val("");
         $('#clientName').val("");
         $('#category').val("");
@@ -205,6 +218,32 @@
 
 
     });
+    var toggle = 0;
+    currentCS = 0;
+    function showInfo(id){
+        if (running == false) {
+            var num = id.substring(3);
+            $('#row' + num).find('td').each(function () {
+                var objID = $(this).attr("id");
+                if (objID != "") {
+                    objID = objID.substring(3);
+                    $('#' + objID).val($(this).text());
+                }
+            });
+            if (currentCS != num) {
+                //$('#catShow'+num).removeAttr('hidden');
+                $('#row' + num).css("background-color", "#1C384B");
+                //$('#catShow'+currentCS).attr('hidden', true);
+                $('#row' + currentCS).css("background-color", "#63C9E4");
+                currentCS = num;
+            }
+            $('#editBtn').removeAttr('disabled');
+            $('#startBtn').css("background-color", '#7DDF64');
+            $('#skipBtn').css("background-color", '#FDC14A');
+            $('#startBtn').removeAttr("disabled");
+            $('#skipBtn').removeAttr("disabled");
+        }
+    }
 
     //MORE FORMATTING AND SENDING INFORMATION TO THE CURRENT TASK FORM
     function startTask(){
@@ -212,20 +251,17 @@
         tableBod.find("tr").css("background-color", "#BCBCBC");
         tRow = tableBod.find("tr:nth-child(1)");
         tRow.css("background-color", "#1C384B");
+        running = true;
 
-        $('#taskID').val(tRow.find("td:nth-child(1)").text());
-        $('#clientName').val(tRow.find("td:nth-child(2)").text());
-        $('#category').val(tRow.find("td:nth-child(3)").text());
-        $('#skillset').val(tRow.find("td:nth-child(4)").text());
-        $('#startDate').val(tRow.find("td:nth-child(5)").text());
-        $('#totalTime').val("");
+        $('#startBtn').prop("hidden", "hidden");
+        $('#skipBtn').prop("hidden", "hidden");
+        $('#compBtn').removeAttr("disabled");
+        $('#escBtn').removeAttr("disabled");
+        $('#compBtn').removeAttr("hidden");
+        $('#escBtn').removeAttr("hidden");
 
         $('#compBtn').css("background-color", '#7DDF64');
         $('#escBtn').css("background-color", '#E84348');
-        $('#skipBtn').css("background-color", '#FDC14A');
-        $('#compBtn').removeAttr("disabled");
-        $('#escBtn').removeAttr("disabled");
-        $('#skipBtn').removeAttr("disabled");
 
         $('#confirmModal').modal('hide');
 
@@ -266,7 +302,10 @@
     function complete(){
         $('#totalTime').val($("#timer").html());
         $('#status').val("Complete");
+        $('#SLA').val("Met");
         clearTimeout(t);
+        updateKey("complete");
+        running = false;
     }
     //ENDS TIMER AND SKIPS TASK
     function skipTask(){
@@ -274,7 +313,10 @@
         $('#totalTime').val($("#timer").html());
         $('#status').val("Skipped");
         $('#reason').val($('#skipReason').val());
+        $('#SLA').val("Broken");
         clearTimeout(t);
+        updateKey("complete");
+        running = false;
     }
     //ENDS TIMER AND ESCALATES TASK
     function escTask(){
@@ -282,7 +324,13 @@
         $('#totalTime').val($("#timer").html());
         $('#status').val("Escalated");
         $('#reason').val($('#escReason').val());
+        $('#SLA').val("Broken");
         clearTimeout(t);
+        updateKey("complete");
+        running = false;
+    }
+    function updateKey(str){
+        $('#formKey').val(str);
     }
 
 </script>

@@ -10,6 +10,7 @@
 
 <div class="container-fluid">
     <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <p style="padding-left: 20px;"><input id="backBtn" type="button" class="btn btn-primary btn-danger" onclick="updateKey('back')" data-toggle="modal" data-target="#backModal" value="Back" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="font-family: 'Lato', sans-serif; padding-left: 4%; padding-top: 50px">
             <h4 color="#1C384B">Edit User</h4>
         </div >
@@ -25,7 +26,7 @@
                         <label for="firstNameInput">First Name</label>
                     </dt>
                     <dd>
-                        <input class="form-control" id="firstNameInput" name="firstNameInput" type="text" onchange="updateUsername()" value="{{userInfo[3]}}">
+                        <input class="form-control" id="firstNameInput" name="firstNameInput" type="text" onchange="" value="{{userInfo[3]}}">
                     </dd>
                 </div>
                 <div class="form-group col">
@@ -33,7 +34,7 @@
                         <label for="lastNameInput">Last Name</label>
                     </dt>
                     <dd>
-                        <input class="form-control" id="lastNameInput" name="lastNameInput" type="text" onchange="updateUsername()" value="{{userInfo[4]}}">
+                        <input class="form-control" id="lastNameInput" name="lastNameInput" type="text" onchange="" value="{{userInfo[4]}}">
                     </dd>
                 </div>
             </div>
@@ -140,7 +141,48 @@
             <div hidden class="form-group">
                 {{render_field(form.catSkills, class_="form-control")}}
             </div>
-            <p><input id="compBtn" type="submit" class="btn btn-primary" onclick="complete()" value="Save" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+            <div hidden class="form-group">
+                {{render_field(form.formKey, class_="form-control")}}
+            </div>
+            <p><input id="compBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal" value="Save" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+            <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmModalLabel">Save Edits Confirmation</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to save the user edits?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            <button  class="btn btn-primary" onclick="complete('edit')" type="submit" >Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="backModal" tabindex="-1" role="dialog" aria-labelledby="backModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editModalLabel">Leaving Page?</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to leave the page?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            <button type="submit"  class="btn btn-primary" onclick="updateKey('back')">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></div>
         <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
@@ -179,24 +221,6 @@
         else if (pText == "Admin")
             $('#positionInput option[value="3"]').prop("selected", "selected");
     });
-    function updateUsername(){
-        var u;
-        var first = ($('#firstNameInput').val()).toLowerCase();
-        var last = ($('#lastNameInput').val()).toLowerCase();
-        if (first != "" && last != ""){
-            if (last.length > 8)
-                last = last.substring(0,8);
-            u = (first.substring(0,1)+(last));
-            if (u.length < 8){
-                var num = (Math.floor(Math.random()*1000)).toString();
-                num = num.substring(0,(9-u.length));
-                u = u+num;
-            }
-            $('#usernameInput').val(u);
-        }
-        else
-            $('#usernameInput').val("");
-    }
 
     function checkPassword(){
         var confPass = $('#confPasswordInput').val();
@@ -226,7 +250,7 @@
 
     }
 
-    function complete(){
+    function complete(key){
         var cS="";
         $("li").each(function (){
             var txt = $(this).attr("id");
@@ -249,6 +273,12 @@
         //SET POSITION
         var pos = $('#positionInput').find(':selected').text();
         $('#position').val(pos);
+
+        updateKey(key);
+    }
+
+    function updateKey(str){
+        $('#formKey').val(str);
     }
 
 </script>

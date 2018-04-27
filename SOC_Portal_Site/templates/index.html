@@ -5,14 +5,88 @@
         <title>CYBRIANT - SOC PORTAL</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-{% extends 'layout.html' %}
 
-{% block body %}
-<div align="middle">
-        <a class="btn btn-lg btn-warning float-center"  href="/taskQueue">Analyst Login</a>
-        <a class="btn btn-lg btn-warning float-center" href="/mTaskQueue">Manager Login</a>
-        <a class="btn btn-lg btn-warning float-center" href="/adminTaskList">Admin Login</a>
+
+
+        <!-- Roboto Font -->
+        <link href="https://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet">
+
+        <!-- jquery javascript -->
+        <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+
+
+        <!-- DataTables CSS -->
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css">
+
+        <!-- DataTables javascript-->
+        <!-- <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-1.12.4.js"></script> -->
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/plug-ins/1.10.16/api/page.jumpToData().js"></script>
+
+
+        <!-- Bootstrap CSS -->
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+
+
+
+
+        <!-- ajax javascript-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+
+        <!-- Bootstrap Javascript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+
+
+        <div style="background-color: #FDC14A"><br><br></div>
+</head>
+<body>
+<div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-top: 20px" align="middle">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <img src="/static/Cybriant_Logo.png" height="90px" width="450px" style="padding-left: 20px;">
+        </div>
+        <div></div>
 </div>
+<hr>
 
+<div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-top: 20px; alignment: center;" align="middle">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"></div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" align="middle">
+                {% if lga > 0 %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Oh dunk!</strong> Your username or password must be wrong.
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                {% endif %}
+                {% from "includes/_formhelpers.html" import render_field %}
+                <form method="POST" action="">
+                        <div class="form-group">
+                              {{render_field(form.username, class_="form-control")}}
+                        </div>
+                        <div class="form-group">
+                              {{render_field(form.password, class_="form-control")}}
+                        </div>
+                        <p><input id="compBtn" type="submit" class="btn btn-primary" value="Login" style="background-color: #FDC14A; color: white; width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+                </form>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"></div>
+</div>
+</body>
+<script type="text/javascript">
+    $("label[for='username']").prop("hidden", "hidden");
+    $("label[for='password']").prop("hidden", "hidden");
+    $("#username").prop("placeholder", "Username");
+    $("#password").prop("placeholder", "Password");
+</script>
+</html>
 
-{% endblock %}

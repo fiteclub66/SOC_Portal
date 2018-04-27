@@ -10,21 +10,32 @@
 
 <div class="container-fluid">
     <br><br>
+    {% if eNote == '1' %}
+    <div align="middle" >
+        <div style="width: 50%" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Warning!</strong> Check all Users, Clients, and Tasks after category changes.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+    {% endif %}
     <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="font-family: 'Lato', sans-serif; padding-left: 4%; padding-top: 50px">
             <h4 color="#1C384B">Category List</h4>
 
         </div >
-        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 
             <div></div>
             <table id="categoriesTable" name="categoriesTable" class="table table-hover" cellspacing="10" width="100%" style="font-family: 'Lato', sans-serif; margin-left: auto; margin-right: auto; color: #1C384B;">
                 <thead>
                 <tr style="color: #1C384B; background-color: white; font-size: 18;">
                     <th>Name</th>
-                    <th>
-                        <div class="float-right">
-                            <button class="btn btn-success" name="createButton" style="background-color: #7DDF64; color: white;">Create</button>
+                    <th align="middle">
+                        <div>
+                            <a href="/newCategory"><button class="btn btn-success" name="createButton" style="background-color: #7DDF64; color: white;">Create</button></a>
                         </div>
                     </th>
                 </tr>
@@ -33,7 +44,7 @@
                     {% for item in categories %}
                     <tr name="{{item[0][0]}}" id="row{{loop.index}}" style="background-color: #63C9E4; color: white; font-size: 18;  border-top: 2px solid white">
                         <td id="rowcategoryName" style="padding-left: 20px;" >{{item[0][1]}}</td>
-                        <td id=""><img src="/static/info.png" id="btn{{loop.index}}" onclick="showInfo(this.id)"></td>
+                        <td id="" align="middle" width="50px"><img src="/static/info.png" id="btn{{loop.index}}" onclick="showInfo(this.id)"></td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -46,8 +57,12 @@
             </div>
             {% from "includes/_formhelpers.html" import render_field %}
             <form method="POST" action="" style="background-color: #DCDCDC; padding-left: 20px; padding-right: 20px; padding-top: 20px; padding-bottom: 20px; border-radius:5px;">
+                <button id="editBtn" disabled onclick="updateKey('edit')" type="button" data-toggle="modal" data-target="#editModal" class="btn btn-sm" style="float:right;">EDIT</button>
                 <div class="form-group">
                     {{render_field(form.categoryName, class_="form-control")}}
+                </div>
+                <div hidden class="form-group">
+                    {{render_field(form.formKey, class_="form-control")}}
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <hr  style="width: 100%; border-top: 1px solid gray;">
@@ -68,7 +83,6 @@
                     </dd>
                 </div>
                 {% endfor %}
-                <p><input id="editBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" disabled value="Edit" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
                 <p><input id="delBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteModal" disabled value="Delete" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
                 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -109,7 +123,9 @@
                     </div>
                 </div>
             </form>
+
         </div>
+    </div>
 
     </div>
 </div>
@@ -117,6 +133,7 @@
 <script type="text/javascript">
     $( document ).ready(function() {
         $('#categoryName').attr("readonly","readonly");
+        $('#categoriesTable').DataTable();
     });
 
     currentCS = 0;
@@ -137,7 +154,6 @@
             currentCS = num;
         }
         $('#delBtn').css("background-color", '#E84348');
-        $('#editBtn').css("background-color", '#FDC14A');
         $('#delBtn').removeAttr('disabled');
         $('#editBtn').removeAttr('disabled');
     }

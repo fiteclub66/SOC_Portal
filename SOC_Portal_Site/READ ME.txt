@@ -1,0 +1,46 @@
+Updated: 04/27/2018
+Cybriant SOC Portal Progress and Read Me
+What works and what doesn’t
+________________
+
+
+How to start the system:
+1. It is not fully deployed but to run the Flask server just start and run the file “app.py”
+2. There are three “cron jobs” that are commented out
+   1. Change the file paths of the update files as well as root accesses in order to run them
+   2. NOTE: running app in debug mode, cron jobs will add twice
+1. Be sure that the proper versions of Flask, WTForms, Python-Crontab and Python 3.6 are installed
+2. Access the system through a separate stand-alone window as page sleep will interrupt timer
+
+
+System logins:
+1. Administrator - can create all new users
+   1. Username: “admin”
+   2. Password: “admin”
+1. Manager
+   1. Username: “manager”
+   2. Password: “manager”
+
+
+Progress:
+1. Phase 1 - MVP Complete
+   1. Tasks adding and completing done
+   2. User access rights and activities available
+   3. Adding Category/Skillsets to clients, users, and tasks done
+   4. Daily database updates done
+   5. Task expiration done
+   6. Login done
+   7. Creation and Editing of clients, users, tasks, and category/skillsets done
+1. Phase 2 - Partially Implemented
+   1. User metric values on Overview page
+   2. Logs have been created but implements through code
+   3. Export task data to csv created but not implemented
+   4. Creation and viewing of Packages/Templates done
+1. Phase 2 - Not Implemented
+   1. Adding, deleting, and editing of Packages/Templates
+   2. Overview graphing
+   3. Searching and viewing numerous analysts’ overview
+
+
+Conclusion:
+        This system works as a basic task creation and user completion task tracker. Data is collected and viewable post completion. Serves as base product and proof of concept for eventual and inevitable expansion.

@@ -108,7 +108,7 @@ def populateRecurring(rT):
         #print ((str(tStr))+"\n")
     else:
         choices = {'Daily': datetime.timedelta(days=1), 
-                   'Hourly': datetime.timedelta(hours=1),
+                   'Hourly': datetime.timedelta(hours=rT.frequency),
                    'Minutely': datetime.timedelta(minutes=rT.frequency),
                    'Weekly': datetime.timedelta(weeks=1)}
         result = choices.get(rT.freqType, 'default')

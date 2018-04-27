@@ -27,6 +27,9 @@
                         <th>Skillset</th>
                         <th>Start Date</th>
                         <th>End Date</th>
+                        <th hidden >Freq Type</th>
+                        <th hidden>Freq</th>
+                        <th hidden >Special Notes</th>
                         <th>
                             <div>
                                 <a href="/addNewTask"><button class="btn btn-success" name="createButton" style="background-color: #7DDF64; color: white;">Create</button></a>
@@ -72,14 +75,7 @@
                 </div>
                 {% from "includes/_formhelpers.html" import render_field %}
                 <form method="POST" action="" style="background-color: #DCDCDC; width: 350px; padding-left: 20px; padding-right: 20px; padding-top: 20px; padding-bottom: 20px; border-radius:5px;">
-                    <!--<div class="form-group">
-                        <dt>
-                            <label for="userID">User ID</label>
-                        </dt>
-                        <dd>
-                            <input class="form-control" id="userID" name="userID" value="">
-                        </dd>
-                    </div>-->
+                    <button id="editBtn" disabled data-toggle="modal" data-target="#editModal" type="button" class="btn btn-sm" style="float:right;">EDIT</button>
                     <div class="form-group">
                         {{render_field(form.taskID, class_="form-control")}}
                     </div>
@@ -107,29 +103,11 @@
                     <div class="form-group">
                         {{render_field(form.specialNotes, class_="form-control")}}
                     </div>
+                    <div hidden class="form-group">
+                        {{render_field(form.formKey, class_="form-control")}}
+                    </div>
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <hr  style="width: 100%; border-top: 1px solid gray;">
-                    </div>
-                    <p><input id="editBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" disabled value="Edit" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
-                    <p><input id="delBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteModal" disabled value="Delete" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
-                    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="deleteModalLabel">Deletion Confirmation</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    Are you sure you want to delete this task?
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                    <button type="submit" class="btn btn-primary" onclick="updateKey('delete')">Yes</button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
@@ -157,6 +135,7 @@
 
     <script type="text/javascript">
         $( document ).ready(function() {
+            $('#taskList').DataTable();
             $('#userID').attr("readonly","readonly");
             $('#userName').attr("readonly","readonly");
             $('#firstName').attr("readonly","readonly");
@@ -183,9 +162,6 @@
                 $('#row'+currentCS).css("background-color", "#63C9E4");
                 currentCS = num;
             }
-            $('#delBtn').css("background-color", '#E84348');
-            $('#editBtn').css("background-color", '#FDC14A');
-            $('#delBtn').removeAttr('disabled');
             $('#editBtn').removeAttr('disabled');
         }
 

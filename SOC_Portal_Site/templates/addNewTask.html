@@ -5,12 +5,17 @@
     <title>ADD NEW TASK</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-{% extends 'managerHeader.html' %}
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+{% extends 'layout.html' %}
 
 {% block body %}
 
 <div class="container-fluid">
     <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <p style="padding-left: 20px;"><input id="backBtn" type="submit" class="btn btn-primary btn-danger" onclick="updateKey('back')" data-toggle="modal" data-target="#backModal" value="Back" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="font-family: 'Lato', sans-serif; padding-left: 4%; padding-top: 50px">
             <h4 color="#1C384B">Add New Task</h4>
         </div >
@@ -72,12 +77,34 @@
                         <dd>
                             <div id="recurringStart">
                                 <div class="form-group">
-                                    <div class="input-group date" id="datetimepicker7" data-target-input="nearest">
-                                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker7"/>
-                                        <div class="input-group-append" data-target="#datetimepicker7" data-toggle="datetimepicker">
-                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                        </div>
-                                    </div>
+                                    <input type="text" id="datepicker1">
+                                    <select class="form-control select" id="startTime">
+                                        <option value="-1" disabled selected="selected">Select Time</option>
+                                        <option value="00:00">00:00</option>
+                                        <option value="00:00">01:00</option>
+                                        <option value="00:00">02:00</option>
+                                        <option value="00:00">03:00</option>
+                                        <option value="00:00">04:00</option>
+                                        <option value="00:00">05:00</option>
+                                        <option value="00:00">06:00</option>
+                                        <option value="00:00">07:00</option>
+                                        <option value="00:00">08:00</option>
+                                        <option value="00:00">09:00</option>
+                                        <option value="00:00">10:00</option>
+                                        <option value="00:00">11:00</option>
+                                        <option value="00:00">12:00</option>
+                                        <option value="00:00">13:00</option>
+                                        <option value="00:00">14:00</option>
+                                        <option value="00:00">15:00</option>
+                                        <option value="00:00">16:00</option>
+                                        <option value="00:00">17:00</option>
+                                        <option value="00:00">18:00</option>
+                                        <option value="00:00">19:00</option>
+                                        <option value="00:00">20:00</option>
+                                        <option value="00:00">21:00</option>
+                                        <option value="00:00">22:00</option>
+                                        <option value="00:00">23:00</option>
+                                    </select>
                                 </div>
                             </div>
                         </dd>
@@ -89,12 +116,34 @@
                         <dd>
                             <div id="recurringEnd">
                                 <div class="form-group">
-                                    <div class="input-group date" id="datetimepicker8" data-target-input="nearest">
-                                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker8"/>
-                                        <div class="input-group-append" data-target="#datetimepicker8" data-toggle="datetimepicker">
-                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                        </div>
-                                    </div>
+                                    <input type="text" id="datepicker2">
+                                    <select class="form-control select" id="endTime">
+                                        <option value="-1" disabled selected="selected">Select Time</option>
+                                        <option value="00:00">00:00</option>
+                                        <option value="00:00">01:00</option>
+                                        <option value="00:00">02:00</option>
+                                        <option value="00:00">03:00</option>
+                                        <option value="00:00">04:00</option>
+                                        <option value="00:00">05:00</option>
+                                        <option value="00:00">06:00</option>
+                                        <option value="00:00">07:00</option>
+                                        <option value="00:00">08:00</option>
+                                        <option value="00:00">09:00</option>
+                                        <option value="00:00">10:00</option>
+                                        <option value="00:00">11:00</option>
+                                        <option value="00:00">12:00</option>
+                                        <option value="00:00">13:00</option>
+                                        <option value="00:00">14:00</option>
+                                        <option value="00:00">15:00</option>
+                                        <option value="00:00">16:00</option>
+                                        <option value="00:00">17:00</option>
+                                        <option value="00:00">18:00</option>
+                                        <option value="00:00">19:00</option>
+                                        <option value="00:00">20:00</option>
+                                        <option value="00:00">21:00</option>
+                                        <option value="00:00">22:00</option>
+                                        <option value="00:00">23:00</option>
+                                    </select>
                                 </div>
                             </div>
                         </dd>
@@ -157,7 +206,38 @@
                         <label for="singularSelect">Start Date</label>
                     </dt>
                     <dd>
-                        <div id="singularSelect">DATE PICKER HERE</div>
+                        <div id="singularSelect">
+                            <div class="form-group">
+                                <input type="text" id="datepicker3">
+                                <select class="form-control select" id="dueTime">
+                                    <option value="-1" disabled selected="selected">Select Time</option>
+                                    <option value="00:00">00:00</option>
+                                    <option value="00:00">01:00</option>
+                                    <option value="00:00">02:00</option>
+                                    <option value="00:00">03:00</option>
+                                    <option value="00:00">04:00</option>
+                                    <option value="00:00">05:00</option>
+                                    <option value="00:00">06:00</option>
+                                    <option value="00:00">07:00</option>
+                                    <option value="00:00">08:00</option>
+                                    <option value="00:00">09:00</option>
+                                    <option value="00:00">10:00</option>
+                                    <option value="00:00">11:00</option>
+                                    <option value="00:00">12:00</option>
+                                    <option value="00:00">13:00</option>
+                                    <option value="00:00">14:00</option>
+                                    <option value="00:00">15:00</option>
+                                    <option value="00:00">16:00</option>
+                                    <option value="00:00">17:00</option>
+                                    <option value="00:00">18:00</option>
+                                    <option value="00:00">19:00</option>
+                                    <option value="00:00">20:00</option>
+                                    <option value="00:00">21:00</option>
+                                    <option value="00:00">22:00</option>
+                                    <option value="00:00">23:00</option>
+                                </select>
+                            </div>
+                        </div>
                     </dd>
                 </div>
             </div>
@@ -176,25 +256,65 @@
             <div hidden class="form-group">
                 {{render_field(form.frequency, class_="form-control")}}
             </div>
-            <p><input id="compBtn" type="submit" class="btn btn-primary" onclick="complete()" value="Complete" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+            <div hidden class="form-group">
+                {{render_field(form.formKey, class_="form-control")}}
+            </div>
+            <div hidden class="form-group">
+                {{render_field(form.startDate, class_="form-control")}}
+            </div>
+            <div hidden class="form-group">
+                {{render_field(form.endDate, class_="form-control")}}
+            </div>
+            <p><input id="compBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#compModal" value="Complete" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+            <div class="modal fade" id="compModal" tabindex="-1" role="dialog" aria-labelledby="compModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="compModalLabel">Complete Confirmation</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you ready to add the task?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            <button type="submit"  class="btn btn-primary" onclick="complete('add')">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="backModal" tabindex="-1" role="dialog" aria-labelledby="backModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editModalLabel">Leaving Page?</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to leave the page?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            <button type="submit"  class="btn btn-primary" onclick="updateKey('back')">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
 
     </div>
 </div>
 <script type="text/javascript">
 
-    $(function () {
-        $('#datetimepicker7').datetimepicker();
-        $('#datetimepicker8').datetimepicker({
-            useCurrent: false
-        });
-        $("#datetimepicker7").on("change.datetimepicker", function (e) {
-            $('#datetimepicker8').datetimepicker('minDate', e.date);
-        });
-        $("#datetimepicker8").on("change.datetimepicker", function (e) {
-            $('#datetimepicker7').datetimepicker('maxDate', e.date);
-        });
-    });
+    $( function() {
+        $( "#datepicker1" ).datepicker();
+        $( "#datepicker2" ).datepicker();
+        $( "#datepicker3" ).datepicker();
+    } );
 
     currentC = 0;
     function catSelect(){
@@ -216,21 +336,50 @@
         }
         currentV = s;
     }
-
+    var recurring = false;
     function showMenu(id){
         var num = $("#"+id).find(':selected').val();
         if (num==0){
             $('#singularMenu').removeAttr('hidden');
             $('#recurringMenu').attr('hidden', true);
+            recurring = false;
         }
         else if (num==1){
             $('#recurringMenu').removeAttr('hidden');
             $('#singularMenu').attr('hidden', true);
+            recurring = true;
         }
     }
 
-    function complete(){
-    //    CLIENT NAME EQUAL TO CLIENT SELECT
+    function complete(key){
+        if (recurring){
+            var startDate = (($('#datepicker1').val())+" "+($("#startTime").find(':selected').text()));
+            var endDate = (($('#datepicker2').val())+" "+($("#endTime").find(':selected').text()));
+
+            var temp = startDate.split(" ");
+            var dates = temp[0].split("/");
+            var times = temp[1].split(":");
+            var sD = (dates[2]+","+dates[0]+","+dates[1]+","+times[0]);
+
+            var temp2 = endDate.split(" ");
+            var dates2 = temp2[0].split("/");
+            var times2 = temp2[1].split(":");
+            var eD = (dates2[2]+","+dates2[0]+","+dates2[1]+","+times2[0]);
+
+            $('#startDate').val(sD);
+            $('#endDate').val(eD);
+        }
+        else{
+            var singleDate = (($('#datepicker3').val())+" "+($("#dueTime").find(':selected').text()));
+            var temp3 = singleDate.split(" ");
+            var dates3 = temp3[0].split("/");
+            var times3 = temp3[1].split(":");
+            var single = (dates3[2]+","+dates3[0]+","+dates3[1]+","+times3[0]);
+            $('#startDate').val(single);
+            $('#endDate').val(single);
+
+        }
+        //    CLIENT NAME EQUAL TO CLIENT SELECT
         var client = $('#clientSelect').find(':selected').text();
         $('#clientName').val(client);
     //    CATEGORY EQUAL TO CATEGORY SELECT
@@ -278,10 +427,13 @@
                 $('#frequency').val(1);
                 break;
         }
+        updateKey(key);
 
     }
 
-
+    function updateKey(str){
+        $('#formKey').val(str);
+    }
 
 </script>
 {% endblock %}

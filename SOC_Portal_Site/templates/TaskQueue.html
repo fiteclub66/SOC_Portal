@@ -8,8 +8,6 @@
 {% extends 'analystHeader.html' %}
 
 {% block body %}
-
-
 <div class="container-fluid">
 	<br><br>
 	<div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -21,6 +19,7 @@
 				<thead>
 				<tr style="color: #1C384B; background-color: white; font-size: 18;">
 					<th>Task ID</th>
+					<th>Task Name</th>
 					<th>Client Name</th>
 					<th>Category</th>
 					<th>Skillset</th>
@@ -42,6 +41,7 @@
 				{% for task in tasks %}
 					<tr id="{{task[3]}}" name="row{{loop.index}}" style="background-color: #63C9E4; color: white; font-size: 18;  border-top: 2px solid white">
 						<td style="padding-left: 20px;" >{{task[3]}}</td>
+						<td>{{task[5]}}</td>
 						<td>{{task[4]}}</td>
 						<td>{{task[1]}}</td>
 						<td>{{task[2]}}</td>
@@ -62,6 +62,9 @@
 			<form method="POST" action="" style="background-color: #DCDCDC; padding-left: 30px; padding-right: 30px; padding-top: 20px; padding-bottom: 20px; border-radius:5px;">
 				<div class="form-group">
 					{{render_field(form.taskID, class_="form-control")}}
+				</div>
+				<div class="form-group">
+					{{render_field(form.taskName, class_="form-control")}}
 				</div>
 				<div class="form-group">
 					{{render_field(form.clientName, class_="form-control")}}
@@ -87,6 +90,12 @@
 				<div hidden class="form-group">
 					{{render_field(form.reason, class_="text-area form-control")}}
 				</div>
+				<div hidden class="form-group">
+					{{render_field(form.SLA, class_="text-area form-control")}}
+				</div>
+				<div hidden class="form-group">
+					{{render_field(form.formKey, class_="text-area form-control")}}
+				</div>
 				<div><hr></div>
 				<div class="form-group">
 					<dt>
@@ -94,11 +103,13 @@
 					</dt>
 					<dd>
 						<p id="timer" style="font-family: 'Lato', sans-serif; font-size: 30px; text-align: center;"><time>00:00:00</time></p>
+						<p style="font-size: 12px" align="middle"><i>Leave Window Open</i></p>
 					</dd>
 				</div>
-				<p><input id="compBtn" type="submit" class="btn btn-primary" onclick="complete()" disabled value="Complete" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+				<p><input id="startBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal" disabled value="Start" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+				<p><input hidden id="compBtn" type="submit" class="btn btn-primary" onclick="complete()" disabled value="Complete" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
 				<p><input id="skipBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#skipModal" disabled value="Skip" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
-				<p><input id="escBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#escModal" disabled value="Escalate" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+				<p><input hidden id="escBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#escModal" disabled value="Escalate" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
 				<!-- CONFIRMATION MODAL-->
 				<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
 					<div class="modal-dialog" role="document">
@@ -142,7 +153,7 @@
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
-								<button type="submit" class="btn btn-primary" onclick="skipTask()">Skip</button>
+								<button class="btn btn-primary" onclick="skipTask()" type="submit">Skip</button>
 							</div>
 						</div>
 					</div>
@@ -175,6 +186,22 @@
 						</div>
 					</div>
 				</div>
+				<!-- EXPIRED TASK MODAL -->
+				<div class="modal fade" id="expModal" tabindex="-1" role="dialog" aria-labelledby="expModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="expModalLabel">Expired Task</h5>
+							</div>
+							<div class="modal-body">
+								This task has expired.
+							</div>
+							<div class="modal-footer">
+								<button type="submit" class="btn btn-primary" onclick="expTask()">Continue</button>
+							</div>
+						</div>
+					</div>
+				</div>
 			</form>
 		</div>
 	</div>
@@ -185,11 +212,13 @@
 <script type="text/javascript">
 	//DOES SOME LAST MINUTE FORMATTING TO THE PAGE
 	$(document).ready(function topBar(){
+
 	    tBod = $('#queueBod');
 	    tRow = tBod.find("tr:nth-child(1)");
 	    tRow.css("background-color", "#1C384B");
-        tRow.append('<td style="padding-left: 40px; padding-right: 20px;">'+'<img id="pickTask" src="/static/arrow.png" width="30px" height="25px" data-toggle="modal" data-target="#confirmModal">'+'</td>');
+        tRow.append('<td style="padding-left: 40px; padding-right: 20px;">'+'<img id="pickTask" src="/static/info.png" onclick="showInfo()">'+'</td>');
         $('#taskID').attr("readonly","readonly");
+        $('#taskName').attr("readonly","readonly");
         $('#clientName').attr("readonly","readonly");
         $('#category').attr("readonly","readonly");
         $('#skillset').attr("readonly","readonly");
@@ -200,30 +229,80 @@
         $('#skillset').val("");
         $('#startDate').val("");
         $('#specialNotes').val("");
-
-
+        $('#totalTime').val("00:00:00");
 	});
 
-	//MORE FORMATTING AND SENDING INFORMATION TO THE CURRENT TASK FORM
-    function startTask(){
+	function checkDate(){
         tableBod = $('#queueBod');
-        tableBod.find("tr").css("background-color", "#BCBCBC");
         tRow = tableBod.find("tr:nth-child(1)");
-        tRow.css("background-color", "#1C384B");
+        var compDate = tRow.find("td:nth-child(6)").text();
+        var now = new Date().toISOString().split('.')[0];
+        now = String(now).replace(/T/g," ");
+        if(compDate < now){
+			$('#expModal').modal('show');
+		}
+	}
 
-        $('#taskID').val(tRow.find("td:nth-child(1)").text());
-        $('#clientName').val(tRow.find("td:nth-child(2)").text());
-        $('#category').val(tRow.find("td:nth-child(3)").text());
-        $('#skillset').val(tRow.find("td:nth-child(4)").text());
-        $('#startDate').val(tRow.find("td:nth-child(5)").text());
-        $('#totalTime').val("");
+    var toggle = 0;
+    function showInfo(){
+        if (toggle == 0) {
+            tableBod = $('#queueBod');
+            tableBod.find("tr").css("background-color", "#BCBCBC");
+            tRow = tableBod.find("tr:nth-child(1)");
+            tRow.css("background-color", "#1C384B");
+
+            $('#taskID').val(tRow.find("td:nth-child(1)").text());
+            $('#taskName').val(tRow.find("td:nth-child(2)").text());
+            $('#clientName').val(tRow.find("td:nth-child(3)").text());
+            $('#category').val(tRow.find("td:nth-child(4)").text());
+            $('#skillset').val(tRow.find("td:nth-child(5)").text());
+            $('#startDate').val(tRow.find("td:nth-child(6)").text());
+
+            $('#startBtn').css("background-color", '#7DDF64');
+            $('#skipBtn').css("background-color", '#FDC14A');
+            $('#startBtn').removeAttr("disabled");
+            $('#skipBtn').removeAttr("disabled");
+            $('#editBtn').removeAttr("disabled");
+
+            toggle = 1;
+            checkDate();
+        }
+        else if (toggle == 1){
+            tableBod = $('#queueBod');
+            tableBod.find("tr").css("background-color", "#63C9E4");
+            tRow = tableBod.find("tr:nth-child(1)");
+
+            $('#taskID').val("");
+            $('#taskName').val("");
+            $('#clientName').val("");
+            $('#category').val("");
+            $('#skillset').val("");
+            $('#startDate').val("");
+            $('#totalTime').val("");
+
+            $('#startBtn').css("background-color", '#5A9AD8');
+            $('#skipBtn').css("background-color", '#5A9AD8');
+            $('#startBtn').attr("disabled", "disabled");
+            $('#skipBtn').attr("disabled", "disabled");
+            $('#editBtn').attr("disabled", "disabled");
+
+            toggle = 0;
+        }
+
+    }
+
+
+    //MORE FORMATTING AND SENDING INFORMATION TO THE CURRENT TASK FORM
+    function startTask(){
+        $('#startBtn').prop("hidden", "hidden");
+        $('#skipBtn').prop("hidden", "hidden");
+        $('#compBtn').removeAttr("disabled");
+        $('#escBtn').removeAttr("disabled");
+        $('#compBtn').removeAttr("hidden");
+        $('#escBtn').removeAttr("hidden");
 
         $('#compBtn').css("background-color", '#7DDF64');
         $('#escBtn').css("background-color", '#E84348');
-        $('#skipBtn').css("background-color", '#FDC14A');
-        $('#compBtn').removeAttr("disabled");
-        $('#escBtn').removeAttr("disabled");
-        $('#skipBtn').removeAttr("disabled");
 
         $('#confirmModal').modal('hide');
 
@@ -264,23 +343,38 @@
 	function complete(){
         $('#totalTime').val($("#timer").html());
         $('#status').val("Complete");
+        $('#SLA').val("Met");
         clearTimeout(t);
+        updateKey('complete');
 	}
 	//ENDS TIMER AND SKIPS TASK
     function skipTask(){
-        //$('#skipModal').modal('hide');
         $('#totalTime').val($("#timer").html());
         $('#status').val("Skipped");
         $('#reason').val($('#skipReason').val());
+        $('#SLA').val("Broken");
         clearTimeout(t);
+        updateKey('complete');
     }
 	//ENDS TIMER AND ESCALATES TASK
     function escTask(){
-        //$('#escModal').modal('hide');
         $('#totalTime').val($("#timer").html());
         $('#status').val("Escalated");
         $('#reason').val($('#escReason').val());
+        $('#SLA').val("Broken");
         clearTimeout(t);
+        updateKey('complete');
+    }
+    //ENDS TIMER AND ESCALATES TASK
+    function expTask(){
+        $('#totalTime').val($("#timer").html());
+        $('#status').val("Expired");
+        $('#SLA').val("Broken");
+        clearTimeout(t);
+        updateKey('expired');
+    }
+    function updateKey(str){
+        $('#formKey').val(str);
     }
 
 </script>

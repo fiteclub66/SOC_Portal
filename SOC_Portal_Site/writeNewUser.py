@@ -24,11 +24,19 @@ def addUser(u, pW, fN, lN, e, pN, p, cS):
     userData = (u, pW, fN, lN, e, pN, p)
     cur.execute(insertUser,userData)
     
+    
+    
     q1 = ("SELECT userID FROM Users WHERE password = '"+pW+"'")
     cur.execute(q1)
     
     for userID in cur:
         uID = userID[0]
+    
+    userMetric = ("INSERT INTO Metrics "
+                   "(userID, tasksCompleted, SLAratio, tasksEscalated, completionRatio) "
+                   "VALUES ('"+uID+"', 0,0,0,0)")
+
+    cur.execute(userMetrics)
     
     for item in catSkills:
         if item != "":

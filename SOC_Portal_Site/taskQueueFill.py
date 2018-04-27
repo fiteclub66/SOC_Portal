@@ -70,13 +70,13 @@ def getDB():
     return mysql.connector.connect(user='root', password='MyR00t1423!',
                               host='10.0.51.21',
                              database='SOC_Portal')
-def populateAnalystTable():
+def populateAnalystTable(uID):
     db = getDB()
-
-
+    
     cur = db.cursor(buffered=True)
     #query = "SELECT * FROM UpcomingTasks"
-    query = ("SELECT * FROM ((SELECT * FROM CategoryRelations) t1 INNER JOIN (SELECT * FROM UpcomingTasks ORDER BY startDate LIMIT 10) t2 ON (t1.catSkillID = t2.catSkillID)) ORDER BY taskID ASC")
+    #query = ("SELECT * FROM ((SELECT * FROM CategoryRelations) t1 INNER JOIN (SELECT * FROM UpcomingTasks ORDER BY startDate ASC LIMIT 10) t2 ON (t1.catSkillID = t2.catSkillID)) ORDER BY startDate ASC")
+    query = ("SELECT * FROM (SELECT * FROM CategoryRelations) t1 INNER JOIN (SELECT s2.* FROM (SELECT * FROM SkillsetRelations WHERE userID = '"+str(uID)+"') s1 INNER JOIN (SELECT * FROM UpcomingTasks ORDER BY startDate) s2 ON s1.catSkillID=s2.catSkillID) t2 ON t1.catSkillID=t2.catSkillID ORDER BY startDate ASC LIMIT 10")
     cur.execute(query)
     tList = []
     for item in cur:

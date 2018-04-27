@@ -6,12 +6,12 @@ def getDB():
                               host='10.0.51.21',
                              database='SOC_Portal')
     
-def populateSkillsets():
+def populateAllSkillsets():
     db = getDB()
     
     cur = db.cursor(buffered=True)
     skillsetList = []
-    skillQuery = ("Select * from CategoryRelations")
+    skillQuery = ("SELECT * FROM CategoryRelations")
     cur.execute(skillQuery)
     for item in cur:
         skillsetList.append(item)
@@ -19,3 +19,17 @@ def populateSkillsets():
     cur.close()
     db.close()
     return skillsetList
+
+def populateCategorySkillset(catName):
+    db = getDB()
+    
+    cur = db.cursor(buffered=True)
+    catSkills = []
+    query = ("SELECT * FROM CategoryRelations WHERE category = '"+catName+"'")
+    cur.execute(query)
+    for item in cur:
+        catSkills.append(item)
+        
+    cur.close()
+    db.close()
+    return catSkills

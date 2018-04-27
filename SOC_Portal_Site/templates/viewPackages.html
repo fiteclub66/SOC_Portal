@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>CATEGORY LIST</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% extends 'adminHeader.html' %}
+    {% block body %}
+
+
+<div class="container-fluid">
+    <br><br>
+    {% if eNote == '1' %}
+    <div align="middle" >
+        <div style="width: 50%" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Warning!</strong> Check all Users, Clients, and Tasks after category changes.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="font-family: 'Lato', sans-serif; padding-left: 4%; padding-top: 50px">
+            <h4 color="#1C384B">Package List</h4>
+        </div >
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+
+            <div></div>
+            <table id="packagesTable" name="packagesTable" class="table table-hover" cellspacing="10" width="100%" style="font-family: 'Lato', sans-serif; margin-left: auto; margin-right: auto; color: #1C384B;">
+                <thead>
+                <tr style="color: #1C384B; background-color: white; font-size: 18;">
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th align="middle">
+                        <div>
+                            <a href="/newPackage"><button class="btn btn-success" name="createButton" style="background-color: #7DDF64; color: white;">Create</button></a>
+                        </div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody id="listBod" style="margin-bottom: 10px;">
+                {% for item in packages %}
+                <tr name="{{item[0][1]}}" id="row{{loop.index}}" style="background-color: #63C9E4; color: white; font-size: 18;  border-top: 2px solid white">
+                    <td id="rowpackageID" style="padding-left: 20px;">{{item[1][0][0]}}</td>
+                    <td id="rowpackageName"  >{{item[0]}}</td>
+                    <td id="" align="middle" width="50px"><img src="/static/info.png" id="btn{{loop.index}}" onclick="showInfo(this.id)"></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-xs-2 col-sm-2 col-md-3 col-lg-3"
+        <div class="row col-xs-2 col-sm-2 col-md-3 col-lg-3">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <h5  style="color: #1C384B; font-family: 'Lato', sans-serif;">Current Task</h5>
+            </div>
+            {% from "includes/_formhelpers.html" import render_field %}
+            <form method="POST" action="" style="background-color: #DCDCDC; padding-left: 20px; padding-right: 20px; padding-top: 20px; padding-bottom: 20px; border-radius:5px;">
+                <button id="editBtn" disabled onclick="updateKey('edit')" type="button" data-toggle="modal" data-target="#editModal" class="btn btn-sm" style="float:right;">EDIT</button>
+                <div class="form-group">
+                    {{render_field(form.packageID, class_="form-control")}}
+                </div>
+                <div class="form-group">
+                    {{render_field(form.packageName, class_="form-control")}}
+                </div>
+                <div hidden class="form-group">
+                    {{render_field(form.formKey, class_="form-control")}}
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <hr  style="width: 100%; border-top: 1px solid gray;">
+                </div>
+                {% for set in packages %}
+                <div hidden id="skiShow{{loop.index}}">
+                    <dt>
+                        <label for="currentSkillsets{{loop.index}}">Contents</label>
+                    </dt>
+                    <dd>
+                        <div id="currentSkillsets{{loop.index}}">
+                            <ul id="list{{loop.index}}">
+                                {% for item in set[1] %}
+                                <li id="{{item[3]}}" style="font-size: 12px;">{{item[2]}}: {{item[4]}}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </dd>
+                </div>
+                {% endfor %}
+                <p><input id="delBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteModal" disabled value="Delete" style="width:100%; text-align: center; font-family: 'Lato', sans-serif;"></p>
+                <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel">Deletion Confirmation</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete this category?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                <button type="submit" class="btn btn-primary" onclick="updateKey('delete')">Yes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModalLabel">Edit Confirmation</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to edit this category?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                <button type="submit"  class="btn btn-primary" onclick="updateKey('edit')">Yes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+</div>
+
+<script type="text/javascript">
+    $( document ).ready(function() {
+        $('#packageName').attr("readonly","readonly");
+        $('#packageID').attr("readonly","readonly");
+        $('#packagesTable').DataTable();
+    });
+
+    currentCS = 0;
+    function showInfo(id){
+        var num = id.substring(3);
+        $('#row'+num).find('td').each(function () {
+            var objID = $(this).attr("id");
+            if(objID != "") {
+                objID = objID.substring(3);
+                $('#' + objID).val($(this).text());
+            }
+        });
+        if (currentCS != num){
+            $('#skiShow'+num).removeAttr('hidden');
+            $('#row'+num).css("background-color", "#1C384B");
+            $('#skiShow'+currentCS).attr('hidden', true);
+            $('#row'+currentCS).css("background-color", "#63C9E4");
+            currentCS = num;
+        }
+        $('#delBtn').css("background-color", '#E84348');
+        $('#delBtn').removeAttr('disabled');
+        $('#editBtn').removeAttr('disabled');
+    }
+
+    function updateKey(str){
+        $('#formKey').val(str);
+    }
+</script>
+
+
+
+    {% endblock %}
